@@ -4,13 +4,14 @@ from flask import Flask, request, redirect
 from re import search
 from flask.helpers import url_for
 from flask.templating import render_template
+from googleapiclient import errors
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import math
 import base64
-import urllib.parse
+import urllib.parse 
 import requests
 
 # If modifying these scopes, delete the file token.json.
@@ -28,7 +29,7 @@ def convert_size(size_bytes):
    size_name = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
    i = int(math.floor(math.log(size_bytes, 1024)))
    p = math.pow(1024, i)
-   s = round(size_bytes / p, 2)
+   s = round(size_bytes / p, 2) 
    return "%s %s" % (s, size_name[i])
 
 def copy_file(source, destination):
@@ -41,7 +42,7 @@ def copy_file(source, destination):
             fileId=origin_file_id, body=copied_file,supportsAllDrives = True).execute()
     except Exception as error:
         print(error)
-    return None
+    return {}
 
 def callback(request_id, response, exception):
         if exception:
@@ -110,9 +111,14 @@ def get_file_id(src_file_id):
         dst_file_id = src_file_id
         print("file already exist not copying")
     else:
+        print("Copying file")
         r = copy_file(src_file_id, TEMP_FOLDER)
-        dst_file_id = r.get("id")
-        change_permission(dst_file_id)
+        print("copy complete")
+        dst_file_id = r.get("id", None)
+        print(dst_file_id)
+        if dst_file_id != None:
+            change_permission(dst_file_id)
+    print("return id")
     return dst_file_id
 
 def get_file_info(src_file_id):
@@ -132,7 +138,6 @@ def search(search_q, onePageLimit=25):
                                             includeItemsFromAllDrives = "true",
                                             supportsAllDrives = "true").execute()
     list_of_files = response.get('files', [])
-    print(list_of_files)
     san_list = [] 
     if len(list_of_files) != 0:
         for i in list_of_files:
@@ -149,6 +154,7 @@ def index():
 @app.route("/series_search")
 def s_search():
     name = request.args.get("name")
+    name = name.replace("'", "\\'")
     season = request.args.get("sess_nm")
     epi = request.args.get("epi_nm")
     alternate_q = [f"name contains '{name} s{season}e{epi}' or name contains '{name} s{season} e{epi}'", \
@@ -176,12 +182,12 @@ def links():
     file_info = get_file_info(file_id)
     link_dict['size'] = convert_size(int(file_info['size']))
     link_dict['g_link'], link_dict['raw_name'], link_dict['id']= file_info['webContentLink'], file_info["name"], file_info['id']
-    b64_name = f"/{DRIVE_ID}:/{link_dict['raw_name']}".encode("ascii")
+    b64_name = f"/{DRIVE_ID}:/{link_dict['raw_name']}".encode("utf-8")
     b64_name = base64.b64encode(b64_name)
-    b64_name = b64_name.decode("ascii")
+    b64_name = b64_name.decode("utf-8")
     url_name = urllib.parse.quote(link_dict['raw_name'])
     link_dict['web_player'] =  f"{BASE_URL}{DRIVE_ID}:video/{b64_name}" #  BASE_URL + name
-    link_dict['direct_link'] = f"{BASE_URL}{DRIVE_ID}:/{url_name}" # "https://api.shivamhw.codes/"+base64.b64decode(name).decode('ascii')[1:]
+    link_dict['direct_link'] = f"{BASE_URL}{DRIVE_ID}:/{url_name}" # "https://api.shivamhw.codes/"+base64.b64decode(name).decode('utf-8')[1:]
     link_dict['vlc_link'] = f"vlc://{BASE_URL}{DRIVE_ID}:/{url_name}"  # "vlc://"+"https://api.shivamhw.codes/2:/"+urllib.parse.quote(link_dict['link_dict['raw_name']'])
     if requests.head(link_dict['g_link']).status_code != 200:
         return "broken link!! Try other links"
@@ -192,6 +198,9 @@ def links():
 def process_f(file_id):
     try:
         dst_file_id = get_file_id(file_id)
+        print(dst_file_id)
+        if dst_file_id == None:
+            return "error at getting new file"
     except Exception as e:
         print(e)
         return "error and no error is handled at backend. Try another link or call me"+str(e)
@@ -200,15 +209,20 @@ def process_f(file_id):
 @app.route("/search")
 def search_handler():
     query = request.args.get("search_box")
+    query = query.replace("'","\\'")
     dotted_query = ".".join(query.split())
-    query = f"name contains '{query}'" #or name contains '{dotted_query}'"
-    print(query)
-    list_file = search(query)
-    if len(list_file) == 0:
+    queries = [f"name contains '{query}'", \
+        f"name contains '{dotted_query}'"] 
+    for query in queries:
+        print("q : ", query)
+        list_file = search(query)
+        if len(list_file) != 0:
+            break
+    else:
         return "nothing found"
     return render_template('result.html', my_list=list_file)
 
 if __name__ == '__main__':
     initialize()
-    app.run(host='0.0.0.0', port=80)
-    # app.run()
+    # app.run(host='0.0.0.0', port=80)
+    app.run()
