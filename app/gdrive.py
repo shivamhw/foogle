@@ -83,8 +83,8 @@ class GDriveHelper:
             print("copy complete")
             dst_file_id = r.get("id", None)
             print(dst_file_id)
-            if dst_file_id != None:
-                self.change_permission(dst_file_id)
+            # if dst_file_id != None:
+                # self.change_permission(dst_file_id)
         print("return id")
         return dst_file_id
 
