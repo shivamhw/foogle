@@ -100,14 +100,16 @@
 }
 
 
-/* THE END OF THE IMPORTANT STUFF */
-
-/* Basic Styling */
-
-h1 {
+.main_logo h1{
   text-align: center;
   font-size: 4em;
   color: #f44336;
+  text-decoration: none;
+}
+
+.main_logo a{
+  color: #f44336;
+  text-decoration: none;
 }
 .container {
   display: block;

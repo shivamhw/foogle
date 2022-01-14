@@ -5,21 +5,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import math 
+from .exceptions import FileAccessError, FileCopyError, PermissionChangeError, SearchError
 
 TEMP_FOLDER = "1rq0YjXG8hfZHmFcixBktEoVj2JeXlp7w" 
 SCOPES = ['https://www.googleapis.com/auth/drive']
-
-class FileCopyFailed(Exception):
-    pass
-
-class FileAccessFailed(Exception):
-    pass
-
-class PermissionChangeFailed(Exception):
-    pass
-
-class SearchFailed(Exception):
-    pass
 
 class GDriveHelper:
     def __init__(self):
@@ -58,7 +47,7 @@ class GDriveHelper:
             return self.drive_service.files().copy(
                 fileId=origin_file_id, body=copied_file,supportsAllDrives = True).execute()
         except errors.HttpError as error:
-            raise FileCopyFailed(f"Copying file failed to {destination}. Got back {error.error_details}")
+            raise FileCopyError(f"Copying file failed to {destination}. Got back {error.error_details}")
 
 
     def has_parent(self, file_id, parent=TEMP_FOLDER):
@@ -70,7 +59,7 @@ class GDriveHelper:
             else:
                 return False
         except errors.HttpError as e:
-            raise FileAccessFailed(f"Can't access file {file_id}, got {e.error_details}")
+            raise FileAccessError(f"Can't access file {file_id}, got {e.error_details}")
 
 
     def prepare_file(self, src_file_id):
@@ -98,7 +87,7 @@ class GDriveHelper:
         try:
             self.drive_service.permissions().create(fileId=file_id,body=user_permission,fields='id',supportsAllDrives = "true").execute()
         except errors.HttpError as e:
-            raise PermissionChangeFailed(f"Failed to change permission of {file_id}, got {e.error_details}")
+            raise PermissionChangeError(f"Failed to change permission of {file_id}, got {e.error_details}")
 
     
     def get_file_info(self, src_file_id, param='id, name, webContentLink, size'):
@@ -107,7 +96,7 @@ class GDriveHelper:
             res['size'] = GDriveHelper.convert_size(int(res['size']))
             return res
         except errors.HttpError as e:
-            raise FileAccessFailed(f"Cant get info of {src_file_id}, got {e.error_details}")
+            raise FileAccessError(f"Cant get info of {src_file_id}, got {e.error_details[0]['message']}")
 
     
     def search(self, search_q, onePageLimit=25):
@@ -132,7 +121,7 @@ class GDriveHelper:
                         san_list.append(i)
             return san_list
         except errors.HttpError as e:
-            raise SearchFailed(f"Search failed for {search_q}, got {e.error_details}")
+            raise SearchError(f"Search Error for {search_q}, got {e.error_details}")
 
 if __name__=="__main__":
     gd = GDriveHelper()

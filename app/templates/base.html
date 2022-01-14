@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/mainpage.css') }}">
+    <!-- <link rel="stylesheet" href="../static/styles/mainpage.css"> -->
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2DBFHQBCKP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-2DBFHQBCKP');
+    </script> 
+</head>
+<div class="main_logo">
+    <h1><a href="/">FooGle</a></h1> 
+</div>
+<body>
+    {% block body %}{% endblock %}
+</body>
+</html>

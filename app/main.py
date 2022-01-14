@@ -6,8 +6,8 @@ import base64
 import urllib.parse
 import requests
 from .utils import QueryMaker
-from .gdrive import GDriveHelper
-
+from .gdrive import  GDriveHelper
+from .exceptions import FileAccessError
 
 def create_app():
     app = Flask(__name__)
@@ -44,7 +44,10 @@ def create_app():
     def links():
         file_id = request.args.get("file_id")
         link_dict = {}
-        file_info = gd.get_file_info(file_id)
+        try:
+            file_info = gd.get_file_info(file_id)
+        except FileAccessError as e:
+            return render_template('error.html', error=[f"broken link!! Try other links.", f"{str(e)}"])
         link_dict['size'] = file_info['size']
         link_dict['g_link'], link_dict['raw_name'], link_dict['id'] = file_info['webContentLink'], file_info["name"], file_info['id']
         b64_name = f"/{DRIVE_ID}:/{link_dict['raw_name']}".encode("utf-8")
@@ -54,8 +57,9 @@ def create_app():
         link_dict['web_player'] = f"{BASE_URL}{DRIVE_ID}:video/{b64_name}"
         link_dict['direct_link'] = f"{BASE_URL}{DRIVE_ID}:/{url_name}"
         link_dict['vlc_link'] = f"vlc://{BASE_URL}{DRIVE_ID}:/{url_name}"
-        if requests.head(link_dict['g_link']).status_code != 200:
-            return render_template('error.html', error=["broken link!! Try other links"])
+        check_code = requests.head(link_dict['g_link']).status_code
+        if  check_code != 200 and check_code != 302:
+            return render_template('error.html', error=[f"broken link!! Try other links. RT{str(check_code)}"])
         return render_template("links.html", link_dict=link_dict)
 
     @app.route("/process_file/<file_id>")
