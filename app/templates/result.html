@@ -1,29 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>results</title>
-    <link rel="stylesheet" href= "{{ url_for('static',filename='styles/mainpage.css') }}">
-</head>
-<h1>FooGle</h1>
+{% extends "base.html" %}
+{% block title %}Results{% endblock %}
 <h2>Results </h2>
-<body>
-    {% block content %}
-  <table class="rwd-table">
-    <tbody>
-      <tr>
-        <th>File Name</th>
-        <th>Size</th>
-        <th>Date</th>
-        <th>Download Link</th>
-      </tr>
+{% block body %}
+<table class="rwd-table">
+  <tbody>
+    <tr>
+      <th>File Name</th>
+      <th>Size</th>
+      <th>Date</th>
+      <th>Download Link</th>
+    </tr>
     {% for n in my_list%}
-    <tr><td data-th="File Name ">{{n['name']}}</td><td data-th="Size ">{{ n['size'] }}</td><td data-th="Time ">{{ n['modifiedTime'] }}</td><td data-th="Download Link"><a class="dwn_button" href="/process_file/{{ n['id'] }}">Download</a></td></tr>
+    <tr>
+      <td data-th="File Name ">{{n['name']}}</td>
+      <td data-th="Size ">{{ n['size'] }}</td>
+      <td data-th="Time ">{{ n['modifiedTime'] }}</td>
+      <td data-th="Download Link"><a class="dwn_button pls_wait" href="/process_file/{{ n['id'] }}">Download</a></td>
+    </tr>
     {% endfor %}
   </tbody>
-  </table>
-{% endblock %}  
-</body>
-</html>
+</table>
+{% endblock %}

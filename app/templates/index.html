@@ -1,24 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FooGle</title>
-    <link rel="stylesheet" href="{{ url_for('static',filename='styles/mainpage.css') }}">
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2DBFHQBCKP"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-        gtag('config', 'G-2DBFHQBCKP');
-    </script>
-</head>
-
-<body>
-    <h1>FooGle</h1>
+{% extends "base.html" %}
+{% block title %}FooGle{% endblock %}
+{% block body %}
     <div class="form_container">
         <form type="submit" action="/search">
             <input type="text" name="search_box" class="search_box" placeholder="add release year, ex. wanted 2009"
@@ -27,6 +9,4 @@
             <a class="button" href="/series.html" style="background-color: #936795">Search for series</a>
         </form>
     </div>
-</body>
-
-</html>
+{% endblock %}

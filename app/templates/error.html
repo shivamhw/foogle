@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error - Foogle</title>
-    <link rel="stylesheet" href= "{{ url_for('static',filename='styles/mainpage.css') }}">
-</head>
-<body>
-    <h1>Error</h1>
+{% extends "base.html" %}
+{% block title %}Error{% endblock %}
+{% block body %}
     {% for i in error%}
     <p style="text-align: center;">{{i}} </p>
     {% endfor %}
-</body>
-</html>
+{% endblock %}
