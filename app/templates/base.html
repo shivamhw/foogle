@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static',filename='styles/mainpage.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
     <!-- <link rel="stylesheet" href="../static/styles/mainpage.css"> -->
     <script src="{{ url_for('static', filename='main.js') }}"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-2DBFHQBCKP"></script>
@@ -21,6 +22,16 @@
     <h1><a href="/">FooGle</a></h1> 
 </div>
 <body>
-    {% block body %}{% endblock %}
+<div class="please_wait_container" id="please_wait_container_id"><p>Generating Links<br>Please Wait!!!</p></div>
+
+    <div class="main_container">
+        <div class="content" id="main_content_id">
+            {% block body %}{% endblock %}
+        </div>
+        <!-- <footer>
+            <p>Code by shivamwh [github]</p>
+        </footer>     -->
+    </div>
+
 </body>
 </html>

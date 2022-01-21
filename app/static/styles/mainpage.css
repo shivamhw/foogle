@@ -1,4 +1,6 @@
 @import 'https://fonts.googleapis.com/css?family=Open+Sans:600,700';
+@import url('https://fonts.googleapis.com/css2?family=Dongle:wght@300&display=swap');
+
 * {font-family: 'Open Sans', sans-serif;}
 
 .rwd-table {
@@ -178,4 +180,53 @@ cursor: pointer;
 
 .selction_panel{
     margin: 1vh;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.please_wait_container{
+  width: 47vw;
+  text-align: center;
+  min-height: 6em;
+  color: white;
+  position: fixed;
+  background-color: rgb(10, 82, 189);
+  border-radius: 40px;
+  z-index: 1;
+  top: 50%;
+  left: 25%;
+  display: none;
+}
+
+.please_wait_container p{
+  font-family: 'Barlow';
+  font-size: 1.3rem;
+
+}
+
+.main_container{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.content{
+  flex-grow: 1;
+}
+
+body{
+  height: 82%;
+} 
+html{
+  height: 100%;
+}
+.please_wait_container p{
+  font-family: 'Dongle', sans-serif;
+  font-size: 2rem;
+  font-weight: 500;
+
+}
+
+#session_selector{
+  flex-basis: 200px;
 }
