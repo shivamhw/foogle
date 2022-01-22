@@ -11,7 +11,7 @@ window.onload = function(){
 }
 function pls_wait(event){
     main = document.getElementById("main_content_id")
-    document.getElementById("please_wait_container_id").style.display="block";
+    document.getElementById("please_wait_container_id").style.display="flex";
     main.style.filter = "blur(10px)";
     main.style.pointerEvents = "none";
 }
@@ -20,4 +20,11 @@ function copyFunc() {
     navigator.clipboard.writeText(copyBtn.value);
     copyBtn.textContent = "Link Copied!"
     copyBtn.style.backgroundColor = "#2bb447"
+}
+
+function closeBlur(event){
+    main = document.getElementById("main_content_id")
+    document.getElementById("please_wait_container_id").style.display="none";
+    main.style.filter = "";
+    main.style.pointerEvents = "all";
 }

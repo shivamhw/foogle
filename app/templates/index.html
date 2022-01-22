@@ -1,12 +1,20 @@
 {% extends "base.html" %}
 {% block title %}FooGle{% endblock %}
+{% block nav %}   
+<header>
+    <nav>
+        <li class="active_nav"><a href="#">Videos</a></li>
+        <li><a href="/series.html">Series</a></li>
+        <li><a href="#">FAQs</a></li>
+    </nav>
+</header>
+{% endblock %}
 {% block body %}
     <div class="form_container">
         <form type="submit" action="/search">
             <input type="text" name="search_box" class="search_box" placeholder="add release year, ex. wanted 2009"
                 id="search_box">
             <input class="button" type="submit" value="Search!">
-            <a class="button" href="/series.html" style="background-color: #936795">Search for series</a>
         </form>
     </div>
 {% endblock %}
