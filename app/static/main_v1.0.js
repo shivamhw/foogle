@@ -20,7 +20,7 @@ window.onload = function () {
         res = await (await fetch(url)).json();
         child.innerHTML = "";
         res["results"].forEach(item => {
-            child.innerHTML += `<li><a href="https://www.shivamhw.codes/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}">${item["title"]} - ${item["release_date"]}</a></li>`
+            child.innerHTML += `<li><a href="/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}">${item["title"]} - ${item["release_date"]}</a></li>`
         });
     });
 
@@ -30,7 +30,7 @@ window.onload = function () {
         let res = await (await fetch(url)).json();
         sugg.innerHTML ="Trending <br>";
         res["results"].forEach( item => {
-                sugg.innerHTML += `<li><a href="https://www.shivamhw.codes/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}">${item["title"]} - ${item["release_date"]}</a></li>`
+                sugg.innerHTML += `<li><a href="/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}">${item["title"]}</a></li>`
             });
         }
         up();
