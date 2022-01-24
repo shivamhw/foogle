@@ -17,7 +17,7 @@ function copyFunc() {
         copyBtn.textContent = "Link Copied!"
         copyBtn.style.backgroundColor = "#2bb447"
     }).catch(() => {
-        alert("pata ni");
+        alert("ho gya hoga!");
     });
 
 }

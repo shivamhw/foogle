@@ -9,11 +9,9 @@ from .utils import QueryMaker
 from .gdrive import  GDriveHelper
 from .exceptions import FileAccessError
 
-def create_app():
+def create_app(CF_WORKER_SITE, DRIVE_ID, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
     app = Flask(__name__)
-    BASE_URL = "https://api.shivamhw.codes/"
-    DRIVE_ID = "2"
-    gd = GDriveHelper()
+    gd = GDriveHelper(TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER)
 
     @app.route("/")
     def index():
@@ -54,9 +52,9 @@ def create_app():
         b64_name = base64.b64encode(b64_name)
         b64_name = b64_name.decode("utf-8")
         url_name = urllib.parse.quote(link_dict['raw_name'])
-        link_dict['web_player'] = f"{BASE_URL}{DRIVE_ID}:video/{b64_name}"
-        link_dict['direct_link'] = f"{BASE_URL}{DRIVE_ID}:/{url_name}"
-        link_dict['vlc_link'] = f"vlc://{BASE_URL}{DRIVE_ID}:/{url_name}"
+        link_dict['web_player'] = f"{CF_WORKER_SITE}{DRIVE_ID}:video/{b64_name}"
+        link_dict['direct_link'] = f"{CF_WORKER_SITE}{DRIVE_ID}:/{url_name}"
+        link_dict['vlc_link'] = f"vlc://{CF_WORKER_SITE}{DRIVE_ID}:/{url_name}"
         check_code = requests.head(link_dict['g_link']).status_code
         if  check_code != 200 and check_code != 302:
             return render_template('error.html', error=[f"broken link!! Try other links. RT{str(check_code)}"])

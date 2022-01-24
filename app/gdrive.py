@@ -1,3 +1,4 @@
+from glob import glob
 from googleapiclient import errors
 import os
 from googleapiclient.discovery import build
@@ -7,24 +8,28 @@ from google.oauth2.credentials import Credentials
 import math 
 from .exceptions import FileAccessError, FileCopyError, PermissionChangeError, SearchError
 
-TEMP_FOLDER = "1rq0YjXG8hfZHmFcixBktEoVj2JeXlp7w" 
+# TEMP_FOLDER = "1rq0YjXG8hfZHmFcixBktEoVj2JeXlp7w" 
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
 class GDriveHelper:
-    def __init__(self):
+    def __init__(self, token, credentials, temp_dir):
+        # global TEMP_FOLDER
+        # TEMP_FOLDER = temp_dir
+        self.TEMP_DIR = temp_dir
+        print(temp_dir)
         creds = None
-        if os.path.exists('app/token.json'):
-            creds = Credentials.from_authorized_user_file('app/token.json', SCOPES)
+        if os.path.exists(token):
+            creds = Credentials.from_authorized_user_file(token, SCOPES)
         # If there are no (valid) credentials available, let the user log in.
         if not creds or not creds.valid:
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             else:
                 flow = InstalledAppFlow.from_client_secrets_file(
-                    'app/credentials.json', SCOPES)
+                    credentials, SCOPES)
                 creds = flow.run_local_server(port=0)
             # Save the credentials for the next run
-            with open('app/token.json', 'w') as token:
+            with open(token, 'w') as token:
                 token.write(creds.to_json())
         self.drive_service = build('drive', 'v3', credentials=creds)
 
@@ -39,7 +44,9 @@ class GDriveHelper:
         return "%s %s" % (s, size_name[i])
 
 
-    def copy_file(self, source, destination = TEMP_FOLDER):
+    def copy_file(self, source, destination = None):
+        if destination == None:
+            destination = self.TEMP_DIR
         origin_file_id = source 
         folder_id = destination 
         copied_file = {'title': 'copy_title.mkv', 'parents':[folder_id]}
@@ -50,7 +57,9 @@ class GDriveHelper:
             raise FileCopyError(f"Copying file failed to {destination}. Got back {error.error_details}")
 
 
-    def has_parent(self, file_id, parent=TEMP_FOLDER):
+    def has_parent(self, file_id, parent=None):
+        if parent == None:
+            parent = self.TEMP_DIR
         try:
             res = self.drive_service.files().get(fileId=file_id, fields='parents',supportsAllDrives='true').execute()
             files_parent = res.get('parents', None)
