@@ -1,14 +1,11 @@
-{% extends "base.html" %}
-{% block title %}Final Link{% endblock %}
-{% block body %}
+{% extends "base.html" %} {% block title %}Final Link{% endblock %} {% block body %}
 <table class="rwd-table">
     <tbody>
         <tr>
             <th colspan="2">Please select your prefered method..</th>
         </tr>
         <td>{{link_dict['raw_name']}} | {{ link_dict['size'] }}</td>
-        <td><button class="dwn_button" onclick="copyFunc()" style="background-color: #cc00b5;"
-                value="https://shivamhw.codes/links?file_id={{ link_dict['id'] }}" id="copyBtn">Copy link</button></td>
+        <td><button class="dwn_button" onclick="copyFunc()" style="background-color: #cc00b5;" value="https://shivamhw.codes/links?file_id={{ link_dict['id'] }}" id="copyBtn">Copy link</button></td>
         <tr>
             <td>Google Drive Link</td>
             <td><a class="dwn_button" href="{{ link_dict['g_link'] }}">Download</a></td>
@@ -29,13 +26,6 @@
         </tr>
     </tbody>
 </table>
-<p style="font-size: 10px; color: var(--accent-red);">*Web player only works for files that supports online stream, so only use
-    web streaming link if you know what you are doing !!<br>
-    # Right click and copy link of Direct Download to get shareable link or to stream video on media player other
-    then VLC<br>
-    @ Download VLC media player for <a
-        href="https://play.google.com/store/apps/details?id=org.videolan.vlc&hl=en_IN&gl=US">Android</a> or <a
-        href="https://apps.apple.com/us/app/vlc-for-mobile/id650377962">IOS</a> or <a
-        href="https://www.videolan.org/vlc/"> PC</a></p>
+<p style="font-size: 10px; color: var(--accent-red);">*Web player only works for files that supports online stream, so only use web streaming link if you know what you are doing !!<br> # Right click and copy link of Direct Download to get shareable link or to stream video on media player other then VLC<br>    @ Download VLC media player for <a href="https://play.google.com/store/apps/details?id=org.videolan.vlc&hl=en_IN&gl=US">Android</a> or <a href="https://apps.apple.com/us/app/vlc-for-mobile/id650377962">IOS</a> or <a href="https://www.videolan.org/vlc/"> PC</a></p>
 
 {% endblock %}
