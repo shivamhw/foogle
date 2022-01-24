@@ -332,3 +332,39 @@ select {
 .error {
     color: var(--accent-red);
 }
+
+
+.auto-box{
+    /* border : 2px solid red; */
+    width: 85vw;
+    /* background-color: var(--); */
+    margin-left: 30px;
+    /* height: 300px; */
+    align-self: center;
+
+}
+.suggest a, li,
+.auto-box a, li{
+  color: white;
+  line-height:1.5;
+  list-style-type: none;
+  text-decoration: none;
+}
+.auto-box li{
+  padding-left: 10px;
+  padding-bottom: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.322);
+}
+.auto-box li:first-child{
+  border-top: 10px;
+}
+.suggest a:hover,
+.auto-box a:hover{
+  color: red;
+}
+
+.suggest{
+    color : var(--accent-red);
+    text-align: center;
+    margin-top: 19px;
+}
