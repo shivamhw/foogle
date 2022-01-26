@@ -368,3 +368,13 @@ select {
     text-align: center;
     margin-top: 19px;
 }
+
+.size_selector{
+    text-align: center;
+    color : white;
+    margin-bottom: 10px;
+    font-size: 0.9em;
+    border: 2px solid var(--accent-red);
+    border-radius: 14px;
+    padding: 8px;
+}
