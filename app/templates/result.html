@@ -2,6 +2,16 @@
 {% block title %}Results{% endblock %}
 <h2>Results </h2>
 {% block body %}
+<div class="size_selector"><input type="radio" name="size_rad" id="MB" onclick="filterBySize(this);" value="500 MB">
+  <label for="MB"> < 500MB </label>
+  <input type="radio" value="1 GB" name="size_rad" id="GB" onclick="filterBySize(this);">
+  <label for="GB"> < 1GB </label>
+  <input type="radio"
+  value="10 GB" name="size_rad" id="TGB" onclick="filterBySize(this);" >
+  <label for="TGB"> < 10GB </label>
+  <input value="INF" type="radio" name="size_rad" id="INF" onclick="filterBySize(this);">
+  <label for="INF"> No Limit</label>
+</div>
 <table class="rwd-table">
   <tbody>
     <tr>
