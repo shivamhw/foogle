@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}FooGle{% endblock %}
-{% block nav %}   
+{% block nav %}
 <header>
     <nav>
         <li class="active_nav"><a href="#">Videos</a></li>
@@ -10,45 +10,48 @@
 </header>
 {% endblock %}
 {% block body %}
-    <div class="form_container">
-        <form type="submit" action="/search">
-            <input type="text" name="search_box" autocomplete="off" class="search_box" placeholder="add release year, ex. wanted 2009"
-                id="search_box">
-            <input class="button" type="submit" value="Search!">
-        </form>
-    </div>
-    <div class="auto-box" id = "auto_box_id">
-    </div>
-    <div class="suggest" id="suggest_box_id"></div>
-    <script>
-        const sugg = document.querySelector(".suggest");
-        url = "https://api.themoviedb.org/3/movie/popular?api_key=31833e5be915a6e5621728ce631edac1&language=en-IN&page=1";
-        fetch(url).then(resp => resp.json()).then( res => {
-            sugg.innerHTML ="Trending <br>";
-            res["results"].forEach( item => {
-                sugg.innerHTML += `<li><a href="/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}">${item["title"]}</a></li>`
-            });
-        })
+<div class="search_box_div" id="search_box_div_id">
+    <form id="search_form" type="submit" action="/search">
+    <input type="text" name="search_box" autocomplete="off" class="search_box" id="search_box">
+    </form>
+    <button type="submit" id="btnSubmit" form="search_form"><i class="fa-solid fa-magnifying-glass"  style="font-size: 1em;padding: 8px; color:white;"></i></button>
+</div>
+<div class="auto-box" id="auto_box_id"></div>
+<div class="suggest" id="suggest_box_id"></div>
+<script>
+    const sugg = document.querySelector(".suggest");
+    url = "https://api.themoviedb.org/3/movie/popular?api_key=31833e5be915a6e5621728ce631edac1&language=en-IN&page=1";
+    fetch(url).then(resp => resp.json()).then(res => {
+        sugg.innerHTML = "Trending <br>";
+        res["results"].forEach(item => {
+            sugg.innerHTML += `<li><a href="/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}">${item["title"]}</a></li>`
+        });
+    })
 
-        const searchForm = document.querySelector(".search_box");
+    const searchForm = document.querySelector(".search_box");
     const input = document.querySelector("input");
     let child = document.querySelector(".auto-box");
     input.addEventListener("keyup", async () => {
         let box = document.getElementById("auto_box_id");
-        if (input.value.length == 0){
-            box.style.display = "none";
-            document.getElementById("suggest_box_id").style.display="block";
+        if (input.value.length == 0) {
+            box.classList.remove("shown")
+            document.getElementById("suggest_box_id").style.display = "block";
+            document.getElementById("search_box_div_id").classList.remove("expand")
             return;
         }
-        document.getElementById("suggest_box_id").style.display="none";
-
-        box.style.display = "block";
+        document.getElementById("suggest_box_id").style.display = "none";
         url = `https://api.themoviedb.org/3/search/movie?api_key=31833e5be915a6e5621728ce631edac1&language=en-US&query=${input.value}&page=1&include_adult=false`
         res = await (await fetch(url)).json();
         child.innerHTML = "";
+        if(res["results"].length == 0){
+            document.getElementById("search_box_div_id").classList.remove("expand");
+            return;
+        }
         res["results"].forEach(item => {
             child.innerHTML += `<li><a href="/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}">${item["title"]} - ${item["release_date"]}</a></li>`
         });
+        document.getElementById("search_box_div_id").classList.add("expand")
+        box.classList.add("shown")
     });
-        </script>
+</script>
 {% endblock %}
