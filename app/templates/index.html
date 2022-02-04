@@ -48,7 +48,9 @@
             return;
         }
         res["results"].forEach(item => {
-            child.innerHTML += `<li><a href="/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}">${item["title"]} - ${item["release_date"]}</a></li>`
+            poster = item["poster_path"]
+            posterUrl = "https://image.tmdb.org/t/p/w200/"+poster
+            child.innerHTML += `<div class="auto_suggest_item"><a href="/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}"><img class="poster_img" width="100px" src="${posterUrl}"></img><li>${item["title"]} - ${item["release_date"]}<br><br>${item["overview"].slice(0,100)}...</a></li><div>`
         });
         document.getElementById("search_box_div_id").classList.add("expand")
         box.classList.add("shown")

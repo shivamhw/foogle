@@ -20,9 +20,10 @@ def create_app(CF_WORKER_SITE, DRIVE_ID, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_F
     @app.route("/series_search")
     def s_search():
         search_data = [None] * 3
-        search_data[0], search_data[1], search_data[2] = request.args.get("name"), request.args.get(
+        search_data[0], search_data[1], search_data[2] = request.args.get("search_box"), request.args.get(
             "sess_nm"), request.args.get("epi_nm")
         list_file = []
+        print(search_data, "dekhlo")
         alternate_q = QueryMaker.make_query(
             QueryMaker.series_querymaker, search_data)
         for q in alternate_q["q"]:
