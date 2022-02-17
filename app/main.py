@@ -83,7 +83,7 @@ def create_app(CF_WORKER_SITE, DRIVE_ID, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_F
         queries = QueryMaker.make_query(QueryMaker.movie_querymaker, [query])
         for query in queries["q"]:
             print("q : ", query)
-            result = gd.search(q)
+            result = gd.search(query)
             print(len(result))
             if len(result) != 0:
                 list_file += result
