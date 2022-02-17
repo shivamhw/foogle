@@ -92,9 +92,15 @@
     .rwd-table tr:nth-child(2) {
         border-top: none;
     }
+    .search_box_div{
+        width: 800px;
+    }
 }
 
 @media screen and (min-width: 600px) {
+
+
+
     .rwd-table tr:hover:not(:first-child) {
         background-color: #d8e7f3;
     }
@@ -386,9 +392,8 @@ border-radius: 70px;
 padding: 0px;
 display: flex;
 justify-content: center;
-height: 38px;
-min-width: 90%;
-max-width: 90%;
+height: 40px;
+width: 330px;
 transition: all ease-in 25ms;
 align-items: center;
 }
@@ -400,7 +405,7 @@ align-items: center;
 
 .auto-box.shown{
     display: block;
-    width: 90%;
+    width: 330px;
     margin-bottom: 10px;
     background-color: var(--accent-light);
     border-bottom-left-radius: 30px;
@@ -430,4 +435,13 @@ align-items: center;
 .poster_img{
     border-radius: 10px;
     box-shadow: 2px 2px 5px 1px #00000063;
+}
+
+@media screen and (min-width: 600px) {
+    .search_box_div{
+        width: 800px;
+    }
+    .auto-box.shown{
+        width: 800px;
+    }
 }
