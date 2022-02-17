@@ -27,9 +27,12 @@ def create_app(CF_WORKER_SITE, DRIVE_ID, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_F
         alternate_q = QueryMaker.make_query(
             QueryMaker.series_querymaker, search_data)
         for q in alternate_q["q"]:
-            list_file = gd.search(q)
-            # print("inuse q : ", q, "Results :: ", len(list_file), list_file)
-            if len(list_file) != 0:
+            print("execute query ", q)
+            result = gd.search(q)
+            print(len(result))
+            if len(result) != 0:
+                list_file += result
+            if len(list_file) > 5:
                 break
         if len(list_file) == 0:
             return render_template("error.html", error=["No results for that one! Might consider checking spelling."])
@@ -76,13 +79,17 @@ def create_app(CF_WORKER_SITE, DRIVE_ID, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_F
     @app.route("/search")
     def search_handler():
         query = request.args.get("search_box")
+        list_file = []
         queries = QueryMaker.make_query(QueryMaker.movie_querymaker, [query])
         for query in queries["q"]:
             print("q : ", query)
-            list_file = gd.search(query)
-            if len(list_file) != 0:
+            result = gd.search(q)
+            print(len(result))
+            if len(result) != 0:
+                list_file += result
+            if len(list_file) > 5:
                 break
-        else:
+        if len(list_file) == 0:
             return render_template("error.html", error=["No results for that one! Might consider checking spelling."])
         return render_template('result.html', my_list=list_file)
 

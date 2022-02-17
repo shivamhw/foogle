@@ -108,7 +108,7 @@ class GDriveHelper:
             raise FileAccessError(f"Cant get info of {src_file_id}, got {e.error_details[0]['message']}")
 
     
-    def search(self, search_q, onePageLimit=25):
+    def search(self, search_q, onePageLimit=30):
         page_token = None
         # f"{search_q} and  mimeType contains 'video/'"
         # print(search_q)
