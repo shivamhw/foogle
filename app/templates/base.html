@@ -23,8 +23,21 @@
     </script>
 </head>
 
+{% set navigation_bar = [
+    ('/', 'videos', 'Videos'),
+    ('/series.html', 'series', 'Series'),
+    ('/files.html', 'files', 'Files')
+] -%}
+{% set active_page = active_page|default('videos') -%}
+
 <body>
-    {% block nav %}{% endblock %}
+    <header>
+        <nav>
+            {% for link, id, name in navigation_bar %}
+            <li {% if id == active_page %} class="active_nav"{% endif %}><a href="{{ link }}">{{ name }}</a></li>
+            {% endfor %}
+        </nav>
+    </header>
     <div class="main_logo">
         <h1><a href="/">FooGle<sub style="font-size: 14px;" >dev</sub></a></h1>
     </div>

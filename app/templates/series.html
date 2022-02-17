@@ -1,14 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Series{% endblock %}
-{% block nav %}
-<header>
-  <nav>
-    <li><a href="/">Videos</a></li>
-    <li class="active_nav"><a href="#">Series</a></li>
-    <li><a href="#">FAQs</a></li>
-  </nav>
-</header>
-{% endblock %}
+{% set active_page = 'series' %}
+
 {% block body %}
 <div class="search_box_div" id="search_box_div_id">
   <form id="search_form" type="submit" action="/series_search">
