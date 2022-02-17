@@ -57,7 +57,7 @@ def create_app(CF_WORKER_SITE, DRIVE_ID, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_F
         link_dict['direct_link'] = f"{CF_WORKER_SITE}{DRIVE_ID}:/{url_name}"
         link_dict['vlc_link'] = f"vlc://{CF_WORKER_SITE}{DRIVE_ID}:/{url_name}"
         check_code = requests.head(link_dict['g_link']).status_code
-        if  check_code != 200 and check_code != 302:
+        if  check_code not in [200, 302, 303]:
             return render_template('error.html', error=[f"broken link!! Try other links. RT{str(check_code)}"])
         return render_template("links.html", link_dict=link_dict)
 
@@ -85,4 +85,22 @@ def create_app(CF_WORKER_SITE, DRIVE_ID, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_F
         else:
             return render_template("error.html", error=["No results for that one! Might consider checking spelling."])
         return render_template('result.html', my_list=list_file)
+
+    @app.route("/files.html")
+    def files_page():
+        return render_template("files.html")
+
+    @app.route("/file_search")
+    def file_search_handler():
+        query = [None] *2
+        query[0], query[1] = request.args.get("search_box"), request.args.get("type", None)
+        queries = QueryMaker.make_query(QueryMaker.files_querymaker, query)
+        print(queries)
+        for q in queries["q"]:
+            print(q)
+            list_of_files = gd.search(q)
+        if(len(list_of_files) == 0):
+            return render_template("error.html", error=["No results for that one! Might consider checking spelling."])
+        return render_template('result.html', my_list=list_of_files)
+
     return app

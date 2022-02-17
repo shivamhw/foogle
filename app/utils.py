@@ -6,6 +6,8 @@ class QueryMaker:
     file_type = {"video": "mimeType contains 'video/'"}
 
     def sanitize(q: str):
+        if q is None:
+            return q
         q = q.replace("'", "\\'")
         return q
 
@@ -41,3 +43,8 @@ class QueryMaker:
         for ind, val in enumerate(alternate_q):
             alternate_q[ind] = val + " and "+self.file_type["video"]
         return alternate_q
+
+    @classmethod
+    def files_querymaker(self, query: List):
+        name, type = query
+        return [f"name contains '{name}'"]

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}FooGle{% endblock %}
+{% block nav %}
+<header>
+    <nav>
+        <li><a href="/">Videos</a></li>
+        <li><a href="/series.html">Series</a></li>
+        <li class="active_nav"><a href="#">Files</a></li>
+    </nav>
+</header>
+{% endblock %}
+{% block body %}
+<div class="search_box_div" id="search_box_div_id">
+    <form id="search_form" type="submit" action="/file_search">
+    <input type="text" name="search_box" autocomplete="off" class="search_box" id="search_box">
+    </form>
+    <button type="submit" id="btnSubmit" form="search_form"><i class="fa-solid fa-magnifying-glass"  style="font-size: 1em;padding: 8px; color:white;"></i></button>
+</div>
+{% endblock %}
