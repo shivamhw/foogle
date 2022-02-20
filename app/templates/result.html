@@ -25,7 +25,9 @@
       <td data-th="File Name ">{{n['name']}}</td>
       <td data-th="Size ">{{ n['size'] }}</td>
       <td data-th="Time ">{{ n['modifiedTime'] }}</td>
-      <td data-th="Download Link"><a class="dwn_button pls_wait" href="/process_file/{{ n['id'] }}">Download</a></td>
+      <td data-th="Download Link"><a class="dwn_button pls_wait" href="/process_file/{{ n['id'] }}">Download</a>
+        <a class="direct_play_btn" href="vlc://https://api.shivamhw.codes/getfile/{{ n['id'] }}">Play in VLC <i class="fa-brands fa-android"></i></a>
+      </td>
     </tr>
     {% endfor %}
   </tbody>

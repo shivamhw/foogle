@@ -5,7 +5,7 @@
             <th colspan="2">Please select your prefered method..</th>
         </tr>
         <td>{{link_dict['raw_name']}} | {{ link_dict['size'] }}</td>
-        <td><button class="dwn_button" onclick="copyFunc()" style="background-color: #cc00b5;" value="https://shivamhw.codes/links?file_id={{ link_dict['id'] }}" id="copyBtn">Copy link</button></td>
+        <td><button class="dwn_button" onclick="copyFunc()" style="background-color: #cc00b5;" value="https://dev.shivamhw.codes/links?file_id={{ link_dict['id'] }}" id="copyBtn">Copy link</button></td>
         <tr>
             <td>Google Drive Link</td>
             <td><a class="dwn_button" href="{{ link_dict['g_link'] }}">Download</a></td>
@@ -17,12 +17,6 @@
         <tr>
             <td>Play Directly in VLC Media Player<sup> @</sup></td>
             <td><a class="dwn_button" href="{{link_dict['vlc_link']}}">Play in VLC</a></td>
-        </tr>
-
-        <tr>
-            <td>Web Streaming Link <sup>*</sup></td>
-            <td><a class="dwn_button" href="{{link_dict['web_player']}}">Play</a></td>
-
         </tr>
     </tbody>
 </table>

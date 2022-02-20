@@ -11,6 +11,8 @@
     --accent-red: #f88a8a;
     --accent-footer: #171717;
     --bg-red: #b03636;
+    --accent-orange : #E85E00;
+    --accent-green : #3ddc84f2;
 }
 
 .rwd-table {
@@ -444,4 +446,21 @@ align-items: center;
     .auto-box.shown{
         width: 800px;
     }
+}
+
+.direct_play_btn{
+    background-color: var(--accent-orange);
+    border: none;
+    color: white;
+    margin-top : 5px;
+    padding: 4px 17px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.direct_play_btn a{
+    text-decoration: none;
 }
