@@ -375,7 +375,7 @@ select {
     color : var(--accent-red);
     text-align: center;
     font-size: 0.95em;
-    margin: 19px auto;
+    align-self: flex-start;
 }
 
 .size_selector{
@@ -439,14 +439,6 @@ align-items: center;
     box-shadow: 2px 2px 5px 1px #00000063;
 }
 
-@media screen and (min-width: 600px) {
-    .search_box_div{
-        width: 800px;
-    }
-    .auto-box.shown{
-        width: 800px;
-    }
-}
 
 .direct_play_btn{
     background-color: var(--accent-orange);
@@ -463,4 +455,44 @@ align-items: center;
 }
 .direct_play_btn a{
     text-decoration: none;
+}
+.title{
+    text-align: left;
+    padding-left: 19px;
+border-left: 2px solid;
+margin: 10px 10px;
+}
+.cards{
+    display: flex;
+    scrollbar-width: thin;
+    overflow-x: scroll;
+}
+.card{
+    margin: 5px 5px;
+}
+.card_section{
+    width: 100vw;
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+.card_poster_img{
+    width: 100px;
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px 1px #00000063;
+}
+
+.card_poster_img:hover{
+    opacity: 0.6;
+}
+
+@media screen and (min-width: 600px) {
+    .search_box_div{
+        width: 800px;
+    }
+    .auto-box.shown{
+        width: 800px;
+    }
+    .card_poster_img{
+        width: 150px;
+    }
 }
