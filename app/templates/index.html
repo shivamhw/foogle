@@ -29,7 +29,7 @@
             temp_card.classList.add("card");
             var poster = item["poster_path"]
             var posterUrl = "https://image.tmdb.org/t/p/w200/" + poster
-            temp_card.innerHTML = `<a href="/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}"><img class="card_poster_img" width="100px" src="${posterUrl}"></img></a>`
+            temp_card.innerHTML = `<a href="/search?search_box=${item["title"]}"><img class="card_poster_img" width="100px" src="${posterUrl}"></img></a>`
             card_block_popular.querySelectorAll(".cards")[0].appendChild(temp_card)
         });
         sugg.appendChild(card_block_popular);
