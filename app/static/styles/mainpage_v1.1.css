@@ -257,6 +257,7 @@ body {
     display: flex;
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
     flex-direction: column;
     background-color: #202124;
     height: 100%;
@@ -464,7 +465,6 @@ margin: 10px 10px;
 }
 .cards{
     display: flex;
-    scrollbar-width: thin;
     overflow-x: scroll;
 }
 .card{
@@ -496,3 +496,30 @@ margin: 10px 10px;
         width: 150px;
     }
 }
+
+/* width */
+::-webkit-scrollbar {
+    /* width: 1px; */
+    height: 3px;
+  }
+  
+  /* Track */
+::-webkit-scrollbar-track {
+    background: var(--accent-light);
+    border-radius: 100px;
+  }
+  
+  /* Handle */
+::-webkit-scrollbar-thumb {
+    background: var(--accent-red);
+    border-radius: 100px;
+  }
+  
+  /* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: var(--bg-red);
+  }
+
+::-webkit-scrollbar:vertical {
+    display: none;
+  }
