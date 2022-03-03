@@ -1,4 +1,3 @@
-from glob import glob
 from googleapiclient import errors
 import os
 from googleapiclient.discovery import build
@@ -12,11 +11,8 @@ from .exceptions import FileAccessError, FileCopyError, PermissionChangeError, S
 SCOPES = ['https://www.googleapis.com/auth/drive']
 
 class GDriveHelper:
-    def __init__(self, token, credentials, temp_dir):
-        # global TEMP_FOLDER
-        # TEMP_FOLDER = temp_dir
+    def __init__(self, token, credentials, temp_dir = None):
         self.TEMP_DIR = temp_dir
-        print(temp_dir)
         creds = None
         if os.path.exists(token):
             creds = Credentials.from_authorized_user_file(token, SCOPES)
@@ -81,8 +77,6 @@ class GDriveHelper:
             print("copy complete")
             dst_file_id = r.get("id", None)
             print(dst_file_id)
-            # if dst_file_id != None:
-                # self.change_permission(dst_file_id)
         print("return id")
         return dst_file_id
 
@@ -108,15 +102,13 @@ class GDriveHelper:
             raise FileAccessError(f"Cant get info of {src_file_id}, got {e.error_details[0]['message']}")
 
     
-    def search(self, search_q, onePageLimit=30):
+    def search(self, search_q, onePageLimit=30, param='id, name, modifiedTime, size'):
         page_token = None
-        # f"{search_q} and  mimeType contains 'video/'"
-        # print(search_q)
         try:
             response = self.drive_service.files().list(q=search_q,
                                                     pageSize=onePageLimit,
                                                     spaces='drive',
-                                                    fields='nextPageToken, files(id, name, modifiedTime, size)',
+                                                    fields=f'nextPageToken, files({param})',
                                                     pageToken=page_token,
                                                     corpora = "allDrives",
                                                     includeItemsFromAllDrives = "true",
@@ -132,5 +124,24 @@ class GDriveHelper:
         except errors.HttpError as e:
             raise SearchError(f"Search Error for {search_q}, got {e.error_details}")
 
+
+    def list_folder(self, folder_id, onePageLimit=50, param='id, name, size'):
+        page_token = None
+        try:
+            response = self.drive_service.files().list(q=f"'{folder_id}' in parents",
+                                                    pageSize=onePageLimit,
+                                                    spaces='drive',
+                                                    fields=f'nextPageToken, files({param})',
+                                                    pageToken=page_token,
+                                                    corpora = "allDrives",
+                                                    includeItemsFromAllDrives = "true",
+                                                    supportsAllDrives = "true").execute()
+            list_of_files = response.get('files', [])
+            return list_of_files
+        except errors.HttpError as e:
+            raise SearchError(f"Error in listing, got {e.error_details}")
+
+
 if __name__=="__main__":
-    gd = GDriveHelper()
+    gd = GDriveHelper("token.json", "credentials.json")
+    
