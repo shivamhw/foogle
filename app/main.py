@@ -33,7 +33,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
                 break
         if len(list_file) == 0:
             return render_template("error.html", error=["No results for that one! Might consider checking spelling."])
-        return render_template('result.html', my_list=list_file)
+        return render_template('result.html', my_list=list_file, cf_worker=CF_WORKER_SITE)
 
     @app.route("/series.html")
     def se_se():
@@ -50,7 +50,8 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
         link_dict['size'] = file_info['size']
         link_dict['g_link'], link_dict['raw_name'], link_dict['id'] = file_info['webContentLink'], file_info["name"], file_info['id']
         link_dict['direct_link'] = f"{CF_WORKER_SITE}/getfile/{file_id}"
-        link_dict["vlc_link"] = f"vlc://{CF_WORKER_SITE}/getfile/{file_id}"
+        link_dict["vlc_link"] = f"vlc://{CF_WORKER_SITE}/stream_file/{file_id}/{link_dict['raw_name']}"
+
         check_code = requests.head(link_dict['g_link']).status_code
         if  check_code not in [200, 302, 303]:
             return render_template('error.html', error=[f"broken link!! Try other links. RT{str(check_code)}"])
@@ -82,7 +83,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
                 break
         if len(list_file) == 0:
             return render_template("error.html", error=["No results for that one! Might consider checking spelling."])
-        return render_template('result.html', my_list=list_file)
+        return render_template('result.html', my_list=list_file, cf_worker=CF_WORKER_SITE)
 
     @app.route("/files.html")
     def files_page():
@@ -99,6 +100,6 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
             list_of_files = gd.search(q)
         if(len(list_of_files) == 0):
             return render_template("error.html", error=["No results for that one! Might consider checking spelling."])
-        return render_template('result.html', my_list=list_of_files)
+        return render_template('result.html', my_list=list_of_files,  cf_worker=CF_WORKER_SITE)
 
     return app

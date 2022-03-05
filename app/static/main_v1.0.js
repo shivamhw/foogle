@@ -13,7 +13,7 @@ function pls_wait(event) {
 
 function copyFunc() {
             var copyBtn = document.getElementById("copyBtn");
-            navigator.clipboard.writeText(copyBtn.value).then(() => {
+            navigator.clipboard.writeText(window.location.href).then(() => {
                 copyBtn.textContent = "Link Copied!"
                 copyBtn.style.backgroundColor = "#2bb447"
             }).catch(() => {
