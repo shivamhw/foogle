@@ -5,7 +5,6 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 cfg = {}
 cfg["CF_WORKER_SITE"] = config["foogle"]["CF_WORKER_SITE"]
-cfg["DRIVE_ID"] = config["foogle"]["DRIVE_ID"]
 cfg["CRED_JSON_PATH"] = config["foogle"]["CRED_JSON_PATH"]
 cfg["TOKEN_JSON_PATH"] = config["foogle"]["TOKEN_JSON_PATH"]
 cfg["TEMP_FOLDER"] = config["foogle"]["TEMP_FOLDER"]

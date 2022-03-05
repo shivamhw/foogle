@@ -66,17 +66,18 @@
     url = `https://api.themoviedb.org/3/search/tv?api_key=31833e5be915a6e5621728ce631edac1&language=en-US&query=${input.value}&page=1&include_adult=false`
     res = await (await fetch(url)).json();
     child.innerHTML = "";
-    // console.log(res)
     if (res["results"].length == 0) {
       document.getElementById("search_box_div_id").classList.remove("expand");
       return;
     }
-    res["results"].forEach(item => {
-      // child.innerHTML += `<li class="series_list_item" id="series_list_item_id" name="${item["name"]}">${item["name"]} - ${item["first_air_date"]} | ${item["origin_country"][0]}</li>`
+    for(var i=0; i<5;i++){
+        // res["results"].forEach(item => {
+            item = res["results"][i]
       poster = item["poster_path"]
       posterUrl = "https://image.tmdb.org/t/p/w200/" + poster
       child.innerHTML += `<div class="auto_suggest_item"><img class="poster_img" name="${item["name"]}" width="100px" src="${posterUrl}"></img><li name="${item["name"]}">${item["name"]} - ${item["first_air_date"]} | ${item["origin_country"][0]}<br><br>${item["overview"].slice(0,100)}...</li><div>`
-    });
+    // });
+    }
     function ListItemCopy(e) {
       document.getElementById("search_box_div_id").classList.remove("expand");
       box.classList.remove("shown")

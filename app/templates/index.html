@@ -20,7 +20,6 @@
 <script>
     const sugg = document.querySelector(".suggest");
     function add_card_block(url, title){
-        // url = "https://api.themoviedb.org/3/movie/popular?api_key=31833e5be915a6e5621728ce631edac1&language=en-IN&page=1";
     var card_block_popular = document.getElementById("card_block").content.cloneNode(true);
     card_block_popular.querySelectorAll("div")[1].innerText = title;
     fetch(url).then(resp => resp.json()).then(res => {
@@ -37,7 +36,6 @@
     }
     add_card_block("https://api.themoviedb.org/3/trending/movie/day?api_key=31833e5be915a6e5621728ce631edac1&language=en-IN&page=1", "Trending Today");
     add_card_block("https://api.themoviedb.org/3/movie/popular?api_key=31833e5be915a6e5621728ce631edac1&language=en-IN&page=1", "Popular");
-    // add_card_block("https://api.themoviedb.org/3/movie/now_playing?api_key=31833e5be915a6e5621728ce631edac1&language=en-IN&page=1", "Now Playing");
     add_card_block("https://api.themoviedb.org/3/movie/top_rated?api_key=31833e5be915a6e5621728ce631edac1&language=en-IN&page=1&region=IN", "Top Rated");
     add_card_block("https://api.themoviedb.org/3/movie/popular?api_key=31833e5be915a6e5621728ce631edac1&language=hi&page=1&region=IN", "Popular in India");
 
@@ -61,11 +59,14 @@
             document.getElementById("search_box_div_id").classList.remove("expand");
             return;
         }
-        res["results"].forEach(item => {
+        for(var i=0; i<5;i++){
+        // res["results"].forEach(item => {
+            item = res["results"][i]
             poster = item["poster_path"]
             posterUrl = "https://image.tmdb.org/t/p/w200/" + poster
-            child.innerHTML += `<div class="auto_suggest_item"><a href="/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}"><img class="poster_img" width="100px" src="${posterUrl}"></img><li>${item["title"]} - ${item["release_date"]}<br><br>${item["overview"].slice(0, 100)}...</a></li><div>`
-        });
+            child.innerHTML += `<div class="auto_suggest_item"><a href="/search?search_box=${item["title"]} ${item["release_date"].slice(0, 4)}"><img class="poster_img" width="70px" src="${posterUrl}"></img><li>${item["title"]} - ${item["release_date"]}<br><br>${item["overview"].slice(0, 100)}...</a></li><div>`
+        // });
+        }
         document.getElementById("search_box_div_id").classList.add("expand")
         box.classList.add("shown")
     });

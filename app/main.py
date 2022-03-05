@@ -1,15 +1,12 @@
-from __future__ import print_function
 from flask import Flask, request, redirect
 from flask.helpers import url_for
 from flask.templating import render_template
-import base64
-import urllib.parse
 import requests
 from .utils import QueryMaker
 from .gdrive import  GDriveHelper
 from .exceptions import FileAccessError
 
-def create_app(CF_WORKER_SITE, DRIVE_ID, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
+def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
     app = Flask(__name__)
     gd = GDriveHelper(TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER)
 
@@ -52,13 +49,7 @@ def create_app(CF_WORKER_SITE, DRIVE_ID, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_F
             return render_template('error.html', error=[f"broken link!! Try other links.", f"{str(e)}"])
         link_dict['size'] = file_info['size']
         link_dict['g_link'], link_dict['raw_name'], link_dict['id'] = file_info['webContentLink'], file_info["name"], file_info['id']
-        # b64_name = f"/{DRIVE_ID}:/{link_dict['raw_name']}".encode("utf-8")
-        # b64_name = base64.b64encode(b64_name)
-        # b64_name = b64_name.decode("utf-8")
-        # url_name = urllib.parse.quote(link_dict['raw_name'])
-        # link_dict['web_player'] = f"{CF_WORKER_SITE}{DRIVE_ID}:video/{b64_name}"
         link_dict['direct_link'] = f"{CF_WORKER_SITE}/getfile/{file_id}"
-        # link_dict['vlc_link'] = f"vlc://{CF_WORKER_SITE}{DRIVE_ID}:/{url_name}"
         link_dict["vlc_link"] = f"vlc://{CF_WORKER_SITE}/getfile/{file_id}"
         check_code = requests.head(link_dict['g_link']).status_code
         if  check_code not in [200, 302, 303]:
@@ -69,7 +60,6 @@ def create_app(CF_WORKER_SITE, DRIVE_ID, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_F
     def process_f(file_id):
         try:
             dst_file_id = gd.prepare_file(file_id)
-            # print(dst_file_id)
             if dst_file_id == None:
                 return "error at getting new file"
         except Exception as e:
