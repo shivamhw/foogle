@@ -53,20 +53,18 @@
 </div>
 <template id="auto_suggest_item_temp">
   <div class="auto_suggest_item">
-    <img class="poster_img" name="dsfd" width="100px" src="">
+    <img class="poster_img" name="" width="100px" src="">
   </img>
-    <li name="test_name">text in li
-    </li>
+    <li name="test_name"></li>
     <div>
 </template>
 <div class="auto-box" id="auto_box_id"></div>
 <script>
-  const searchForm = document.querySelector(".search_box");
   const input = document.querySelector("input");
-  const child = document.querySelector(".auto-box");
   input.addEventListener("keyup", async () => {
     let box = document.getElementById("auto_box_id");
-    let url = `https://api.themoviedb.org/3/search/tv?api_key=31833e5be915a6e5621728ce631edac1&language=en-US&query=${input.value}&page=1&include_adult=false`
+    let url = `https://api.themoviedb.org/3/search/tv?api_key=31833e5be915a6e5621728ce631edac1&language=en-US&query=${input.value}&page=1&include_adult=false`;
+    let moviedb_img_path = "https://image.tmdb.org/t/p/w200/";
     if (input.value.length == 0) {
       toggleSuggest(0);
       return;
@@ -76,16 +74,8 @@
       toggleSuggest(0);
       return;
     }
-    child.innerHTML = "";
     for (var i = 0; i < Math.min(5, res["results"].length); i++) {
-      let temp_node = document.querySelector("#auto_suggest_item_temp").content.cloneNode(true);
-      item = res["results"][i];
-      poster = item["poster_path"];
-      posterUrl = "https://image.tmdb.org/t/p/w200/" + poster;
-      temp_node.querySelector("img").src = posterUrl;
-      temp_node.querySelector("li").setAttribute("name",item["name"]);
-      temp_node.querySelector("img").setAttribute("name",item["name"]);
-      temp_node.querySelector("li").innerHTML = `${item["name"]} - ${item["first_air_date"]} | ${item["origin_country"][0]}<br><br>${item["overview"].slice(0, 100)}...`
+      let temp_node = create_auto_suggest_item(res["results"][i], moviedb_img_path);
       box.appendChild(temp_node)
     }
     document.querySelectorAll(".auto_suggest_item").forEach(li => {

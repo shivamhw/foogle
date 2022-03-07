@@ -29,6 +29,17 @@ function closeBlur(event) {
     main.style.pointerEvents = "all";
 }
 
+function create_auto_suggest_item(item, moviedb_img_path){
+      let temp_node = document.querySelector("#auto_suggest_item_temp").content.cloneNode(true);
+      poster = item["poster_path"];
+      posterUrl = moviedb_img_path + poster;
+      temp_node.querySelector("img").src = posterUrl;
+      temp_node.querySelector("li").setAttribute("name",item["name"]);
+      temp_node.querySelector("img").setAttribute("name",item["name"]);
+      temp_node.querySelector("li").innerHTML = `${item["name"]} - ${item["first_air_date"]} | ${item["origin_country"][0]}<br><br>${item["overview"].slice(0, 100)}...`;
+      return temp_node;
+}
+
 function ListItemCopy(e) {
   toggleSuggest(0);
   document.querySelector("input").value = e.target.getAttribute("name");
