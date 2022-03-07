@@ -29,6 +29,22 @@ function closeBlur(event) {
     main.style.pointerEvents = "all";
 }
 
+function ListItemCopy(e) {
+  toggleSuggest(0);
+  document.querySelector("input").value = e.target.getAttribute("name");
+  return;
+}
+
+function toggleSuggest(flg){
+  if(flg == 0 ){
+  document.getElementById("search_box_div_id").classList.remove("expand");
+  document.getElementById("auto_box_id").classList.remove("shown");
+  }else{
+    document.getElementById("search_box_div_id").classList.add("expand")
+    document.getElementById("auto_box_id").classList.add("shown")
+  }
+}
+
 function filterBySize(event){
     LIMIT = String(event.value)
     rs = document.querySelectorAll("tr")
