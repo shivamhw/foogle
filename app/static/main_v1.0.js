@@ -1,16 +1,3 @@
-window.onload = function () {
-    document.querySelectorAll(".pls_wait").forEach(item => {
-        item.addEventListener("click", pls_wait)
-    });
-}
-
-function pls_wait(event) {
-            main = document.getElementById("main_content_id")
-            document.getElementById("please_wait_container_id").style.display = "flex";
-            main.style.filter = "blur(10px)";
-            main.style.pointerEvents = "none";
-        }
-
 function copyFunc() {
             var copyBtn = document.getElementById("copyBtn");
             navigator.clipboard.writeText(window.location.href).then(() => {
@@ -22,6 +9,9 @@ function copyFunc() {
 
         }
 
+function pls_wait(){
+  document.getElementById("please_wait_container_id").classList.add("show");
+}
 function closeBlur(event) {
     main = document.getElementById("main_content_id")
     document.getElementById("please_wait_container_id").style.display = "none";

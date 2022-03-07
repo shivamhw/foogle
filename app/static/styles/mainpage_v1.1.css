@@ -221,27 +221,6 @@ a.dwn_button {
     flex-wrap: wrap;
 }
 
-.please_wait_container {
-    text-align: left;
-    color: white;
-    position: fixed;
-    background-color: var(--accent-dark);
-    z-index: 1;
-    display: none;
-    bottom: 0px;
-    height: 39px;
-    width: 100%;
-    padding-left: 8px;
-    justify-content: space-around;
-}
-
-.please_wait_container p {
-    font-family: 'Barlow';
-    margin: 0%;
-    line-height: 1.4;
-    font-size: 34px;
-}
-
 .main_container {
     /* height: 100%; */
     display: flex;
@@ -268,13 +247,6 @@ html {
     padding: 0;
     height: 100%;
 }
-
-.please_wait_container p {
-    font-family: 'Dongle', sans-serif;
-    font-size: 2rem;
-    font-weight: 500;
-}
-
 header nav {
     display: flex;
     justify-content: space-around;
@@ -523,3 +495,29 @@ margin: 10px 10px;
 ::-webkit-scrollbar:vertical {
     display: none;
   }
+
+
+.please_wait_container{
+      display: none;
+  }
+
+.please_wait_container.show{
+    background-color: var(--accent-dark);
+    opacity: 0.9;
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: auto;
+    gap:10px;
+    top:0%;
+
+}
+
+.pls_wait_popup{
+    color: white;
+    font-size: 1.5em;
+
+}

@@ -3,6 +3,7 @@
 {% block title %}Results{% endblock %}
 <h2>Results </h2>
 {% block body %}
+{% include 'includes/pls_wait.html' %}
 <div class="size_selector"><input type="radio" name="size_rad" id="MB" onclick="filterBySize(this);" value="500 MB">
   <label for="MB"> < 500MB </label>
   <input type="radio" value="5 GB" name="size_rad" id="GB" onclick="filterBySize(this);">
@@ -33,4 +34,9 @@
     {% endfor %}
   </tbody>
 </table>
+<script>
+  document.querySelectorAll(".pls_wait").forEach(item => {
+        item.addEventListener("click", pls_wait)
+    });
+</script>
 {% endblock %}

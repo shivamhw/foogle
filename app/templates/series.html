@@ -9,41 +9,16 @@
     <div class="selction_panel">
       <div id="session_selector">
         <select name="sess_nm" id="sess_nm" size="1">
-          <option value="01">Season 1</option>
-          <option value="02">Season 2</option>
-          <option value="03">Season 3</option>
-          <option value="04">Season 4</option>
-          <option value="05">Season 5</option>
-          <option value="06">Season 6</option>
-          <option value="07">Season 7</option>
-          <option value="08">Season 8</option>
-          <option value="09">Season 9</option>
-          <option value="10">Season 10</option>
+          {% for i in range(1, 20) %}
+          <option value="{% if i < 10 %}0{% endif %}{{ i }}">Season {{ i }}</option>
+          {% endfor %}
         </select>
       </div>
       <div id="episode_selector">
         <select name="epi_nm" id="epi_nm" size="1">
-          <option value="01">Episode 1</option>
-          <option value="02">Episode 2</option>
-          <option value="03">Episode 3</option>
-          <option value="04">Episode 4</option>
-          <option value="05">Episode 5</option>
-          <option value="06">Episode 6</option>
-          <option value="07">Episode 7</option>
-          <option value="08">Episode 8</option>
-          <option value="09">Episode 9</option>
-          <option value="10">Episode 10</option>
-          <option value="11">Episode 11</option>
-          <option value="12">Episode 12</option>
-          <option value="13">Episode 13</option>
-          <option value="14">Episode 14</option>
-          <option value="15">Episode 15</option>
-          <option value="16">Episode 16</option>
-          <option value="17">Episode 17</option>
-          <option value="18">Episode 18</option>
-          <option value="19">Episode 19</option>
-          <option value="20">Episode 20</option>
-          <option value="21">Episode 21</option>
+          {% for i in range(1, 25) %}
+          <option value="{% if i < 10 %}0{% endif %}{{ i }}">episode {{ i }}</option>
+          {% endfor %}
         </select>
       </div>
     </div>
@@ -55,7 +30,7 @@
   <div class="auto_suggest_item">
     <img class="poster_img" name="" width="100px" src="">
   </img>
-    <li name="test_name"></li>
+    <li name=""></li>
     <div>
 </template>
 <div class="auto-box" id="auto_box_id"></div>
