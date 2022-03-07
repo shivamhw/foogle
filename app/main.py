@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, request, redirect, send_file
 from flask.helpers import url_for
 from flask.templating import render_template
 import requests
@@ -14,6 +14,10 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
     @app.route("/")
     def index():
         return render_template('index.html')
+
+    @app.route("/robots.txt")
+    def robot():
+        return send_file("robots.txt")
 
     @app.route("/series_search")
     def s_search():
