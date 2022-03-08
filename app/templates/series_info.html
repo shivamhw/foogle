@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% set navbar_enabled = 'false' %}
+{% block title %}Series Name{% endblock %}
+
+{% block body %}
+<template id="season_item_temp">
+    <div class="season_item">
+      <img class="season_poster_img" name="" width="100px" src="">
+    </img>
+      <li name=""></li>
+      <div>
+  </template>
+<div class="seasons_wrapper"></div>
+  <script>
+
+function season_item(item, moviedb_img_path, series_id){
+      let temp_node = document.querySelector("#season_item_temp").content.cloneNode(true);
+      poster = item["poster_path"];
+      posterUrl = moviedb_img_path + poster;
+      temp_node.querySelector("img").src = posterUrl;
+      temp_node.querySelector("li").setAttribute("name",item["name"]);
+      temp_node.querySelector("img").setAttribute("name",item["name"]);
+      console.log(item);
+      temp_node.querySelector("li").innerHTML = `<a href="/season_details/${series_id}/${item["season_number"]}">${item["name"]} | ${item["episode_count"]} Episodes<br><br>${item["overview"]}</a>`;
+      return temp_node;
+}
+
+    async function add_seasons(series_id){
+      let box = document.querySelector(".seasons_wrapper");
+      let url = `https://api.themoviedb.org/3/tv/${series_id}?api_key=31833e5be915a6e5621728ce631edac1&language=en-US`;
+      let moviedb_img_path = "https://image.tmdb.org/t/p/w200/";
+      let res = await (await fetch(url)).json();
+      for(let i=0; i<res["seasons"].length;i++){
+          let temp_node = season_item(res["seasons"][i], moviedb_img_path, series_id);
+          box.appendChild(temp_node)
+      }
+    };
+    add_seasons({{ series_id }});
+  </script>
+
+{% endblock %}

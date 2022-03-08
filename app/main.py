@@ -19,6 +19,14 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
     def robot():
         return send_file("robots.txt")
 
+    @app.route("/season_details/<series_id>/<season_id>")
+    def season_details(series_id, season_id):
+        return render_template("season_details.html", series_id=series_id, season_id=season_id);
+
+    @app.route("/series_details/<series_id>")
+    def series_details(series_id):
+        return render_template("series_info.html", series_id=series_id);
+
     @app.route("/series_search")
     def s_search():
         search_data = [None] * 3

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% set navbar_enabled = 'false' %}
+{% block title %}Season Name{% endblock %}
+
+{% block body %}
+<template id="season_item_temp">
+    <div class="episode_item">
+      <img class="episode_poster_img" name="" width="150px" src="">
+    </img>
+      <li name=""></li>
+      <div>
+    </template>
+    <div class="seasons_wrapper"></div>
+  <script>
+
+function epi_item(item, moviedb_img_path, series_name, season_id){
+      let temp_node = document.querySelector("#season_item_temp").content.cloneNode(true);
+      poster = item["still_path"];
+      posterUrl = moviedb_img_path + poster;
+      temp_node.querySelector("img").src = posterUrl;
+      temp_node.querySelector("li").setAttribute("name",item["name"]);
+      temp_node.querySelector("img").setAttribute("name",item["name"]);
+      console.log(item);
+      let season_nm = "0";
+      if(season_id > 10){
+          season_nm = "";
+      }
+      season_nm = season_nm+season_id;
+      console.log(season_nm);
+      let episode_nm = "0";
+      if(item["episode_number"] > 10)
+        episode_nm ="";
+      episode_nm = episode_nm+item["episode_number"];
+      console.log(episode_nm)
+      temp_node.querySelector("li").innerHTML = `<a href="/series_search?search_box=${series_name}&sess_nm=${season_nm}&epi_nm=${episode_nm}">${item["episode_number"]}. ${item["name"]}<br><br>${item["overview"]}</a>`;
+      return temp_node;
+}
+
+    async function add_episodes(series_id, season_id){
+      let series_name = await (await fetch(`https://api.themoviedb.org/3/tv/${series_id}?api_key=31833e5be915a6e5621728ce631edac1&language=en-US`)).json();
+      let box = document.querySelector(".seasons_wrapper");
+      let url = `https://api.themoviedb.org/3/tv/${series_id}/season/${season_id}?api_key=31833e5be915a6e5621728ce631edac1&language=en-US`;
+      let moviedb_img_path = "https://image.tmdb.org/t/p/w500/";
+      let res = await (await fetch(url)).json();
+      for(let i=0; i<res["episodes"].length;i++){
+          let temp_node = epi_item(res["episodes"][i], moviedb_img_path, series_name["name"], season_id);
+          box.appendChild(temp_node)
+      }
+    };
+    add_episodes({{ series_id }}, {{ season_id }});
+    // add_episodes(1418, 1);
+  </script>
+
+{% endblock %}

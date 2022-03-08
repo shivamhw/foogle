@@ -237,6 +237,7 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    box-sizing: border-box;
     flex-direction: column;
     background-color: #202124;
     height: 100%;
@@ -520,4 +521,70 @@ margin: 10px 10px;
     color: white;
     font-size: 1.5em;
 
+}
+
+
+.season_item > li{
+    margin: auto 12px;
+    height: 78%;
+overflow: hidden;
+}
+
+.season_item {
+    padding: 10px;
+    border-bottom: 2px solid var(--accent-red);
+    /* font-size: 0.90em; */
+    display: flex;
+    height: 160px;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+  }
+.season_poster_img{
+    border-radius: 10px;
+    box-shadow: 2px 2px 5px 1px #00000063;
+}
+
+.episode_item > li{
+    margin: auto 12px;
+    height: 78%;
+overflow: hidden;
+z-index: 1;
+}
+
+
+.episode_item {
+    padding: 10px;
+    /* border: 2px solid var(--accent-red); */
+    /* font-size: 0.90em; */
+    display: flex;
+    height: 160px;
+    position: relative;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+    box-shadow: 2px 2px 5px 1px #00000063;
+    margin: 10px 0px;
+    border-radius: 10px;
+    
+  }
+.episode_poster_img{
+    border-radius: 10px;
+}
+.season_item a,
+.episode_item a{
+    text-decoration: none;
+    color: white;
+}
+
+@media screen and (max-width : 600px) {
+    .episode_item img{
+        position: absolute;
+    width: 100%;
+    z-index: 0;
+    opacity: 0.4;
+    }
+    .episode_item {
+        padding: 0px;
+    }
 }
