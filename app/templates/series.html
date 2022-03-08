@@ -44,7 +44,9 @@
       toggleSuggest(0);
       return;
     }
+    document.querySelector(".auto-box").innerHTML = "";
     let res = await (await fetch(url)).json();
+    console.log(res["results"]);
     if (res["results"].length == 0) {
       toggleSuggest(0);
       return;
