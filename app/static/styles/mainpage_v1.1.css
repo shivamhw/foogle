@@ -554,22 +554,26 @@ z-index: 1;
 
 
 .episode_item {
-    padding: 10px;
+    /* padding: 10px; */
     /* border: 2px solid var(--accent-red); */
     /* font-size: 0.90em; */
     display: flex;
     height: 160px;
     position: relative;
     align-items: center;
+    transition: all 0.3s ease-in;
     cursor: pointer;
     overflow: hidden;
     box-shadow: 2px 2px 5px 1px #00000063;
     margin: 10px 0px;
     border-radius: 10px;
+    color: white;
     
   }
 .episode_poster_img{
     border-radius: 10px;
+    width: 300px;
+    align-self: baseline;
 }
 .season_item a,
 .episode_item a{
@@ -577,12 +581,72 @@ z-index: 1;
     color: white;
 }
 
+.link_panel{
+    transition: all 0.3s ease-in;
+    height: 0px;
+    color: white;
+    background-color: var(--accent-dark);
+}
+
+.link_panel.shown{
+    margin-top: -10px;
+    height : 300px;
+    box-shadow: 2px 2px 5px 1px #00000063;
+    overflow-y: scroll;
+}
+
+
+
+
+.button_container{
+    width: 120px;
+    height: 35px;
+    background-color: var(-- aliceblue);
+    border: 2px solid var(--bg-red);
+    border-radius: 1em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.25em;
+    gap: 15px;
+}
+
+.episode_entry_in_table {
+    display: flex;
+    color: white;
+    justify-content: space-between;
+    gap: 5px;
+    padding: 20px;
+}
+
+.episode_entry_in_table > .episode_name{
+    display: flex;
+    gap: 20px;
+
+}
+
+.episode_entry_in_table >.episode_name > .episode_size{
+    font-size: 0.8em;
+background-color: cornflowerblue;
+border-radius: 1em;
+text-align: center;
+align-self: flex-start;
+padding: 5px;
+font-weight: bold;
+}
+
 @media screen and (max-width : 600px) {
     .episode_item img{
         position: absolute;
-    width: 100%;
-    z-index: 0;
-    opacity: 0.4;
+        width: 100%;
+        z-index: 0;
+        opacity: 0.3;
+    }
+    .episode_entry_in_table > .episode_name{
+        display: flex;
+        gap: 10px;
+        font-size: 0.8em;
+    
     }
     .episode_item {
         padding: 0px;

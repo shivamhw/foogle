@@ -1,0 +1,20 @@
+<table class="rwd-table">
+  <tbody>
+    <tr>
+      <th>File Name</th>
+      <th>Size</th>
+      <th>Date</th>
+      <th>Download Link</th>
+    </tr>
+    {% for n in my_list%}
+    <tr>
+      <td data-th="File Name ">{{n['name']}}</td>
+      <td data-th="Size ">{{ n['size'] }}</td>
+      <td data-th="Time ">{{ n['modifiedTime'] }}</td>
+      <td  data-th="Download Link" >
+        {% include 'multimedia_buttons.html' %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

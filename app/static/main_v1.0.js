@@ -1,12 +1,11 @@
 function copyFunc() {
             var copyBtn = document.getElementById("copyBtn");
             navigator.clipboard.writeText(window.location.href).then(() => {
-                copyBtn.textContent = "Link Copied!"
+                // copyBtn.textContent = "Link Copied!"
                 copyBtn.style.backgroundColor = "#2bb447"
             }).catch(() => {
                 alert("ho gya hoga!");
             });
-
         }
 
 function pls_wait(){
@@ -47,6 +46,10 @@ function toggleSuggest(flg){
     document.getElementById("search_box_div_id").classList.add("expand")
     document.getElementById("auto_box_id").classList.add("shown")
   }
+}
+
+function copyToClip(url){
+  navigator.clipboard.writeText(url);
 }
 
 function filterBySize(event){
