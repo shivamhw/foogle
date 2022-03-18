@@ -473,7 +473,7 @@ margin: 10px 10px;
 /* width */
 ::-webkit-scrollbar {
     /* width: 1px; */
-    height: 3px;
+    height: 5px;
   }
   
   /* Track */
