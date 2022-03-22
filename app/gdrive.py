@@ -5,7 +5,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import math 
-from exceptions import FileAccessError, FileCopyError, PermissionChangeError, SearchError
+from .exceptions import FileAccessError, FileCopyError, PermissionChangeError, SearchError
 
 # TEMP_FOLDER = "1rq0YjXG8hfZHmFcixBktEoVj2JeXlp7w" 
 SCOPES = ['https://www.googleapis.com/auth/drive']
