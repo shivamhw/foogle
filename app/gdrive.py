@@ -5,7 +5,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 import math 
-from .exceptions import FileAccessError, FileCopyError, PermissionChangeError, SearchError
+from exceptions import FileAccessError, FileCopyError, PermissionChangeError, SearchError
 
 # TEMP_FOLDER = "1rq0YjXG8hfZHmFcixBktEoVj2JeXlp7w" 
 SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -50,7 +50,7 @@ class GDriveHelper:
             return self.drive_service.files().copy(
                 fileId=origin_file_id, body=copied_file,supportsAllDrives = True).execute()
         except errors.HttpError as error:
-            raise FileCopyError(f"Copying file failed to {destination}. Got back {error.error_details}")
+            raise FileCopyError(f"Copying file {source} failed to {destination}. Got back {error.error_details}")
 
 
     def has_parent(self, file_id, parent=None):
@@ -93,7 +93,7 @@ class GDriveHelper:
             raise PermissionChangeError(f"Failed to change permission of {file_id}, got {e.error_details}")
 
     
-    def get_file_info(self, src_file_id, param='id, name, webContentLink, size'):
+    def get_file_info(self, src_file_id, param='id, name, webContentLink, size, parents'):
         try:
             res = self.drive_service.files().get(fileId=src_file_id, fields=param,supportsAllDrives='true').execute()
             res['size'] = GDriveHelper.convert_size(int(res['size']))

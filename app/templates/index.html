@@ -19,6 +19,7 @@
 </template>
 <script>
     const sugg = document.querySelector(".suggest");
+    
     function add_card_block(url, title){
     var card_block_popular = document.getElementById("card_block").content.cloneNode(true);
     card_block_popular.querySelectorAll("div")[1].innerText = title;

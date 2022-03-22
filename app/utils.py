@@ -36,9 +36,9 @@ class QueryMaker:
     @classmethod
     def series_querymaker(self, query: List):
         name, season, epi = query
-        alternate_q = [f"name contains '{name} s{season}e{epi}' or name contains '{name} s{season} e{epi}'",
+        alternate_q = [f"name contains '{name} s{season}.e{epi}' or name contains '{name} s{season}.ep{epi}'",
+                       f"name contains '{name} s{season}e{epi}' or name contains '{name} s{season} e{epi}'",
                        f"name contains '{name} s{season} ep{epi}' or name contains '{name} s{season}ep{epi}'",
-                       f"name contains '{name} s{season}.e{epi}' or name contains '{name} s{season}.ep{epi}'",
                        f"name contains '{name} s{season}' or name contains '{name} season {season}'",
                        f"name contains '{name}'"]
         for ind, val in enumerate(alternate_q):
