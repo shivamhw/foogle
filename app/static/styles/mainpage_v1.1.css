@@ -586,6 +586,7 @@ z-index: 1;
     height: 0px;
     color: white;
     background-color: var(--accent-dark);
+    overflow: hidden;
 }
 
 .link_panel.shown{
