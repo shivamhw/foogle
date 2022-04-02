@@ -1,4 +1,5 @@
 from typing import List
+from urllib.parse import quote
 
 
 class QueryMaker:
@@ -12,21 +13,19 @@ class QueryMaker:
         return q
 
     @classmethod
-    def make_query(self, processor, args: List, type="video", size=None):
+    def make_query(self, processor, args: List):
         for i, val in enumerate(args):
             args[i] = self.sanitize(val)
         queries = {"q": []}
         for temp in processor(args):
             queries["q"].append(temp)
-        if size != None:
-            queries["size"] = size
         return queries
 
     @classmethod
-    def movie_querymaker(self, query: List):
+    def movie_querymaker(self, query: List, sep="."):
         queries = []
         for i in query:
-            dotted_query = ".".join(i.split())
+            dotted_query = sep.join(i.split())
             queries.append(
                 f"name contains '{i}' and {self.file_type['video']}")
             queries.append(
@@ -34,9 +33,10 @@ class QueryMaker:
         return queries
 
     @classmethod
-    def series_querymaker(self, query: List):
+    def series_querymaker(self, query: List, sep="."):
         name, season, epi = query
-        alternate_q = [f"name contains '{name} s{season}.e{epi}' or name contains '{name} s{season}.ep{epi}'",
+        alternate_q = [f"name contains '{ sep.join(name.split()) }{sep}s{season}e{epi}' or name contains '{ sep.join(name.split()) }{sep}s{season}ep{epi}'",
+                       f"name contains '{ sep.join(name.split()) }{sep}s{season}{sep}e{epi}' or name contains '{ sep.join(name.split()) }{sep}s{season}{sep}ep{epi}'",
                        f"name contains '{name} s{season}e{epi}' or name contains '{name} s{season} e{epi}'",
                        f"name contains '{name} s{season} ep{epi}' or name contains '{name} s{season}ep{epi}'",
                        f"name contains '{name} s{season}' or name contains '{name} season {season}'",
@@ -49,3 +49,26 @@ class QueryMaker:
     def files_querymaker(self, query: List):
         name, type = query
         return [f"name contains '{name}'"]
+
+
+class LinkMaker:
+    
+    def __init__(self, cf_worker, **kwargs) -> None:
+    
+        self.options = kwargs
+        self.cf_worker = cf_worker
+
+    def make_links(self, file: dict, **kwargs):
+        if kwargs:
+            options = kwargs
+        else:
+            options = self.options
+        if options.get("stream_link", False):
+            file["stream_link"] = f"{ self.cf_worker }/stream_file/{ file['id'] }/{ quote(file['name']) }"
+        if options.get("process_link", False):
+            file["process_link"] = f"/process_file/{ file['id'] }"
+        if options.get("cf_download_link", False):
+            file["cf_download_link"] = f"{self.cf_worker}/getfile/{file['id']}"
+        if options.get("gdrive_link", False):
+            file["gdrive_link"] = file["webContentLink"]
+        return file

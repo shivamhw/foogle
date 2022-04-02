@@ -30,12 +30,12 @@
       <td  data-th="Download Link" >
         <div class="button_container">
           <div class="download_button pls_wait">
-              <a href="/process_file/{{ n['id'] }}"><i class="fa fa-download" style="color: aqua;" ></i></a>
+              <a href="{{ n['process_link'] }}"><i class="fa fa-download" style="color: aqua;" ></i></a>
           </div>
           <div class="play_with_vlc_button">
-              <a href="vlc://{{ cf_worker }}/stream_file/{{ n['id'] }}/{{ function(n['name']) }}"><i class="fa fa-play-circle" style="color: orange;"></i></a>
+              <a href="vlc://{{ n['stream_link'] }}"><i class="fa fa-play-circle" style="color: orange;"></i></a>
           </div>
-          <div class="copy_link_button" onclick="copyToClip('{{ cf_worker }}/stream_file/{{ n['id'] }}/{{ function(n['name']) }}')">
+          <div class="copy_link_button" onclick="copyToClip('{{ n['stream_link'] }}')">
               <i class="fa fa-clipboard"></i>
           </div>
             </div>

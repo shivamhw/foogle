@@ -6,19 +6,19 @@
         <tr>
             <th colspan="2">Please select your prefered method..</th>
         </tr>
-        <td>{{link_dict['raw_name']}} | {{ link_dict['size'] }}</td>
+        <td>{{link_dict['name']}} | {{ link_dict['size'] }}</td>
         <td><button class="dwn_button" onclick="copyFunc()" style="background-color: #cc00b5;" id="copyBtn">Copy link</button></td>
         <tr>
             <td>Google Drive Link</td>
-            <td><a class="dwn_button" href="{{ link_dict['g_link'] }}">Download</a></td>
+            <td><a class="dwn_button" href="{{ link_dict['gdrive_link'] }}">Download</a></td>
         </tr>
         <tr>
             <td>Direct Download Link</td>
-            <td><a class="dwn_button" href="{{link_dict['direct_link']}}">Download</a></td>
+            <td><a class="dwn_button" href="{{link_dict['cf_download_link']}}">Download</a></td>
         </tr>
         <tr>
             <td>Play Directly in VLC Media Player<sup> @</sup></td>
-            <td><a class="dwn_button" href="{{link_dict['vlc_link']}}">Play in VLC</a></td>
+            <td><a class="dwn_button" href="vlc://{{link_dict['stream_link']}}">Play in VLC</a></td>
         </tr>
     </tbody>
 </table>
