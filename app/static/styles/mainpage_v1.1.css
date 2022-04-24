@@ -438,6 +438,8 @@ margin: 10px 10px;
 }
 .cards{
     display: flex;
+    transition: all 1s ease-in;
+
     overflow-x: scroll;
 }
 .card{
@@ -472,10 +474,13 @@ margin: 10px 10px;
 
 /* width */
 ::-webkit-scrollbar {
-    /* width: 1px; */
+    /* width: 10px; */
     height: 5px;
   }
-  
+
+  *:hover::-webkit-scrollbar {
+    height: 10px;
+}
   /* Track */
 ::-webkit-scrollbar-track {
     background: var(--accent-light);
@@ -491,6 +496,8 @@ margin: 10px 10px;
   /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
     background: var(--bg-red);
+    height: 30px;
+
   }
 
 ::-webkit-scrollbar:vertical {
