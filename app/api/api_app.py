@@ -21,7 +21,6 @@ def create_blueprint(gd, cf_worker):
         for q in alternate_q["q"]:
             print("execute query ", q)
             result = gd.search(q)
-            print(len(result))
             if len(result) != 0:
                 list_file += result
             if len(list_file) > 5:
