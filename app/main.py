@@ -3,6 +3,7 @@ from flask.helpers import url_for
 from flask.templating import render_template
 import requests
 from .utils import QueryMaker, LinkMaker
+from .search_handler import SearchHandler
 from .gdrive import  GDriveHelper, FileAccessError
 from .api.api_app import create_blueprint
 
@@ -44,7 +45,6 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
         search_data[0], search_data[1], search_data[2] = request.args.get("search_box"), request.args.get(
             "sess_nm"), request.args.get("epi_nm")
         list_file = []
-        print(search_data, "dekhlo")
         alternate_q = QueryMaker.make_query(
             QueryMaker.series_querymaker, search_data)
         for q in alternate_q["q"]:
@@ -90,17 +90,13 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
 
     @app.route("/search")
     def search_handler():
-        query = request.args.get("search_box")
+        query = {}
+        query["name"] = request.args.get("search_box")
+        query["release_year"] = request.args.get("release_year", None)
         list_file = []
-        queries = QueryMaker.make_query(QueryMaker.movie_querymaker, [query])
-        for query in queries["q"]:
-            print("q : ", query)
-            result = gd.search(query)
-            print(len(result))
-            if len(result) != 0:
-                list_file += result
-            if len(list_file) > 5:
-                break
+        sh = SearchHandler(gd)
+        print(query)
+        list_file = sh.search(query, QueryMaker.movie_querymaker)
         if len(list_file) == 0:
             return render_template("error.html", error=["No results for that one! Might consider checking spelling."])
         for i in list_file:

@@ -1,4 +1,3 @@
-from typing import List
 from urllib.parse import quote
 
 
@@ -6,34 +5,31 @@ class QueryMaker:
 
     file_type = {"video": "mimeType contains 'video/'"}
 
-    def sanitize(q: str):
-        if q is None:
-            return q
-        q = q.replace("'", "\\'")
-        return q
-
     @classmethod
-    def make_query(self, processor, args: List):
-        for i, val in enumerate(args):
-            args[i] = self.sanitize(val)
+    def make_query(self, processor, args: dict):
         queries = {"q": []}
         for temp in processor(args):
             queries["q"].append(temp)
         return queries
 
     @classmethod
-    def movie_querymaker(self, query: List, sep="."):
+    def movie_querymaker(self, query: dict, sep=[" ", ".", ""]):
         queries = []
-        for i in query:
-            dotted_query = sep.join(i.split())
-            queries.append(
-                f"name contains '{i}' and {self.file_type['video']}")
-            queries.append(
-                f"name contains '{dotted_query}' and {self.file_type['video']}")
+        release_year = query['release_year']
+        name = query['name']
+        if release_year == None:
+            release_year = ""
+        for s in sep:
+            temp = f"{name}{s}{release_year}"
+            if s == " " and len(release_year) == 0:
+                continue 
+            if s == "":
+                temp = name
+            queries.append(f"name contains '{temp}' and {self.file_type['video']}")  
         return queries
 
     @classmethod
-    def series_querymaker(self, query: List, sep="."):
+    def series_querymaker(self, query: dict, sep="."):
         name, season, epi = query
         alternate_q = [f"name contains '{ sep.join(name.split()) }{sep}s{season}e{epi}' or name contains '{ sep.join(name.split()) }{sep}s{season}ep{epi}'",
                        f"name contains '{ sep.join(name.split()) }{sep}s{season}{sep}e{epi}' or name contains '{ sep.join(name.split()) }{sep}s{season}{sep}ep{epi}'",
@@ -46,7 +42,7 @@ class QueryMaker:
         return alternate_q
 
     @classmethod
-    def files_querymaker(self, query: List):
+    def files_querymaker(self, query):
         name, type = query
         return [f"name contains '{name}'"]
 
@@ -54,7 +50,6 @@ class QueryMaker:
 class LinkMaker:
     
     def __init__(self, cf_worker, **kwargs) -> None:
-    
         self.options = kwargs
         self.cf_worker = cf_worker
 
@@ -72,3 +67,9 @@ class LinkMaker:
         if options.get("gdrive_link", False):
             file["gdrive_link"] = file["webContentLink"]
         return file
+
+
+if __name__ == "__main__":
+    print("this function ")
+    q = QueryMaker.make_query(QueryMaker.movie_querymaker, {"name" : "wanted", "release_year": "2009"})
+    print(q)

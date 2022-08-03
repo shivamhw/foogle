@@ -160,3 +160,4 @@ class GDriveHelper:
 
 if __name__ == "__main__":
     gd = GDriveHelper("token.json", "credentials.json")
+    print(gd.get_file_info('1DZHM0aSvgoOxuJiXvbVmWRBujw0vUJIa'))
