@@ -73,7 +73,7 @@
     season_nm = season_nm + season_id;
     console.log(season_nm);
     let episode_nm = "0";
-    if (item["episode_number"] > 10)
+    if (item["episode_number"] >= 10)
       episode_nm = "";
     episode_nm = episode_nm + item["episode_number"];
     temp_node.querySelector("li").innerHTML = `${item["episode_number"]}. ${item["name"]}<br><br>${item["overview"]}`;
