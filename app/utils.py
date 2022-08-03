@@ -59,7 +59,7 @@ class LinkMaker:
         else:
             options = self.options
         if options.get("stream_link", False):
-            file["stream_link"] = f"{ self.cf_worker }/stream_file/{ file['id'] }/{ quote(file['name']) }"
+            file["stream_link"] = f"{ self.cf_worker }/stream_file/{ file['id'] }/{ quote(file['name'].replace(' ', '_')) }"
         if options.get("process_link", False):
             file["process_link"] = f"/process_file/{ file['id'] }"
         if options.get("cf_download_link", False):
