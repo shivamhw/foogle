@@ -601,6 +601,7 @@ z-index: 1;
     height : 300px;
     box-shadow: 2px 2px 5px 1px #00000063;
     overflow-y: scroll;
+    overflow-wrap: anywhere;
 }
 
 
