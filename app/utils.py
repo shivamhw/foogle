@@ -27,6 +27,8 @@ class QueryMaker:
                 temp = name
             queries.append(
                 f"name contains '{temp}' and {self.file_type['video']}")
+        queries.append(f"name contains '{'.'.join(name.split())}' and {self.file_type['video']}")
+        print(queries)
         return queries
 
     @classmethod
