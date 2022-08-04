@@ -11,4 +11,3 @@ app/math
 venv/
 file_id.log
 main_log.log
-.gitignore

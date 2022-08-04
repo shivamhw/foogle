@@ -1,3 +1,4 @@
+from stat import filemode
 from flask import Flask, request, redirect, send_file
 from flask.helpers import url_for
 from flask.templating import render_template
@@ -6,6 +7,10 @@ from .utils import QueryMaker, LinkMaker
 from .search_handler import SearchHandler
 from .gdrive import  GDriveHelper, FileAccessError
 from .api.api_app import create_blueprint
+import logging
+
+
+bad_file_id_logger = logging.getLogger("bad_file",)
 
 def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
     app = Flask(__name__)
@@ -14,6 +19,9 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
     app.register_blueprint(create_blueprint(gd, CF_WORKER_SITE), url_prefix="/api")
     links_result = LinkMaker(CF_WORKER_SITE, stream_link=True, process_link=True, cf_download_link=True)
     link_final_page = LinkMaker(CF_WORKER_SITE, stream_link=True, gdrive_link=True, cf_download_link=True)
+    logging.basicConfig(level=logging.WARNING, filemode="w", filename="main_log.log")
+    bad_handler = logging.FileHandler("file_id.log")
+    bad_file_id_logger.addHandler(bad_handler)
 
     @app.route("/")
     def index():
@@ -71,8 +79,11 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
             if  check_code not in [200, 302, 303]:
                 raise requests.exceptions.HTTPError("Got invalid status code")
         except FileAccessError as e:
+            bad_file_id_logger.error(f"Bad file : {file_id}")
+            logging.exception("File Error in /links ")
             return render_template('error.html', error=[f"broken link!! Try other links.", f"{str(e)}"])
         except requests.exceptions.HTTPError as e:
+            logging.exception("HttpError in /links")
             return render_template('error.html', error=[f"broken link!! Try other links. RT{str(e)}"])
         file_info = link_final_page.make_links(file_info)
         return render_template("links.html", link_dict=file_info)
@@ -84,7 +95,8 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
             if dst_file_id == None:
                 return "error at getting new file"
         except Exception as e:
-            print(e)
+            bad_file_id_logger.error(f"Bad file : {file_id}")
+            logging.exception("Exception in /process file")
             return render_template("error.html", error = ["this one is on me :)" ,str(e)])
         return redirect(url_for('links', file_id=dst_file_id))
 
