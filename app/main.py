@@ -79,10 +79,11 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
             if  check_code not in [200, 302, 303]:
                 raise requests.exceptions.HTTPError("Got invalid status code")
         except FileAccessError as e:
-            bad_file_id_logger.error(f"Bad file : {file_id}")
+            bad_file_id_logger.error(f"Bad file : {file_id} {str(e)}")
             logging.exception("File Error in /links ")
             return render_template('error.html', error=[f"broken link!! Try other links.", f"{str(e)}"])
         except requests.exceptions.HTTPError as e:
+            bad_file_id_logger.error(f"Bad file : {file_id} {str(e)}")
             logging.exception("HttpError in /links")
             return render_template('error.html', error=[f"broken link!! Try other links. RT{str(e)}"])
         file_info = link_final_page.make_links(file_info)
@@ -95,7 +96,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
             if dst_file_id == None:
                 return "error at getting new file"
         except Exception as e:
-            bad_file_id_logger.error(f"Bad file : {file_id}")
+            bad_file_id_logger.error(f"Bad file : {file_id} {str(e)}")
             logging.exception("Exception in /process file")
             return render_template("error.html", error = ["this one is on me :)" ,str(e)])
         return redirect(url_for('links', file_id=dst_file_id))
