@@ -1,4 +1,3 @@
-from stat import filemode
 from flask import Flask, request, redirect, send_file
 from flask.helpers import url_for
 from flask.templating import render_template
@@ -41,7 +40,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
 
     @app.route("/series_details/<series_id>")
     def series_details(series_id):
-        return render_template("series_info.html", series_id=series_id)
+        return render_template("series_details.html", series_id=series_id)
 
     @app.route("/series.html")
     def se_se():
