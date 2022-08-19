@@ -161,4 +161,18 @@ class GDriveHelper:
 
 if __name__ == "__main__":
     gd = GDriveHelper("token.json", "credentials.json")
-    print(gd.get_file_info('1A5lpP8RT3LIL8OhkD4OMdvanJFk1o19F'))
+    defaulter = {}
+    count = 0
+    with open("file_ids", "r") as f:
+        for file in f.readlines():
+            try:
+                print(f"Checking {file} count: {count}")
+                count+=1
+                parents = gd.get_file_info(file.strip())["parents"]
+                for i in parents:
+                    if i not in defaulter.keys():
+                        defaulter[i] = 0
+                    defaulter[i] += 1
+            except:
+                pass
+    print(defaulter)
