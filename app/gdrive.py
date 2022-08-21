@@ -67,23 +67,18 @@ class GDriveHelper:
             raise FileCopyError(
                 f"Copying file {source} failed to {destination}. Got back {error.error_details}")
 
-    def has_parent(self, file_id, parent=None):
-        if parent == None:
-            parent = self.TEMP_DIR
+    def get_parents(self, file_id):
         try:
             res = self.drive_service.files().get(fileId=file_id, fields='parents',
                                                  supportsAllDrives='true').execute()
             files_parent = res.get('parents', None)
-            if files_parent != None and parent in files_parent:
-                return True
-            else:
-                return False
+            return files_parent
         except errors.HttpError as e:
             raise FileAccessError(
                 f"Can't access file {file_id}, got {e.error_details}")
 
-    def prepare_file(self, src_file_id):
-        if self.has_parent(src_file_id):
+    def prepare_file(self, src_file_id, parents = None):
+        if parents is not None and self.TEMP_DIR in parents :
             print("not copying")
             return src_file_id
         else:
