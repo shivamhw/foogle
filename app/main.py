@@ -1,4 +1,3 @@
-from stat import filemode
 from flask import Flask, request, redirect, send_file
 from flask.helpers import url_for
 from flask.templating import render_template
@@ -7,13 +6,15 @@ from .utils import QueryMaker, LinkMaker
 from .search_handler import SearchHandler
 from .gdrive import  GDriveHelper, FileAccessError
 from .api.api_app import create_blueprint
+from .db import LinkDB
 import logging
 
 
 bad_file_id_logger = logging.getLogger("bad_file",)
 
-def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
+def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MONGOURI):
     app = Flask(__name__)
+    db = LinkDB(MONGOURI)
     app.config['TEMPLATES_AUTO_RELOAD'] = True
     gd = GDriveHelper(TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER)
     app.register_blueprint(create_blueprint(gd, CF_WORKER_SITE), url_prefix="/api")
@@ -41,7 +42,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
 
     @app.route("/series_details/<series_id>")
     def series_details(series_id):
-        return render_template("series_info.html", series_id=series_id)
+        return render_template("series_details.html", series_id=series_id)
 
     @app.route("/series.html")
     def se_se():
@@ -91,13 +92,18 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER):
 
     @app.route("/process_file/<file_id>")
     def process_f(file_id):
+        parents = None
         try:
-            dst_file_id = gd.prepare_file(file_id)
+            parents = gd.get_parents(file_id)
+            dst_file_id = gd.prepare_file(file_id, parents)
             if dst_file_id == None:
                 return "error at getting new file"
         except Exception as e:
             bad_file_id_logger.error(f"Bad file : {file_id} {str(e)}")
-            logging.exception("Exception in /process file")
+            db.add_file_blocklist(file_id)
+            if parents is not None:
+                for parent in parents:
+                    db.add_folder_blocklist(parent, file_id)
             return render_template("error.html", error = ["this one is on me :)" ,str(e)])
         return redirect(url_for('links', file_id=dst_file_id))
 

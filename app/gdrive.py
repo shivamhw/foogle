@@ -67,23 +67,18 @@ class GDriveHelper:
             raise FileCopyError(
                 f"Copying file {source} failed to {destination}. Got back {error.error_details}")
 
-    def has_parent(self, file_id, parent=None):
-        if parent == None:
-            parent = self.TEMP_DIR
+    def get_parents(self, file_id):
         try:
             res = self.drive_service.files().get(fileId=file_id, fields='parents',
                                                  supportsAllDrives='true').execute()
             files_parent = res.get('parents', None)
-            if files_parent != None and parent in files_parent:
-                return True
-            else:
-                return False
+            return files_parent
         except errors.HttpError as e:
             raise FileAccessError(
                 f"Can't access file {file_id}, got {e.error_details}")
 
-    def prepare_file(self, src_file_id):
-        if self.has_parent(src_file_id):
+    def prepare_file(self, src_file_id, parents = None):
+        if parents is not None and self.TEMP_DIR in parents :
             print("not copying")
             return src_file_id
         else:
@@ -118,7 +113,7 @@ class GDriveHelper:
             raise FileAccessError(
                 f"Cant get info of {src_file_id}, got {e.error_details[0]['message']}")
 
-    def search(self, search_q, onePageLimit=30, param='id, name, modifiedTime, size'):
+    def search(self, search_q, onePageLimit=50, param='id, name, modifiedTime, size, parents'):
         page_token = None
         try:
             response = self.drive_service.files().list(q=search_q,
@@ -136,6 +131,7 @@ class GDriveHelper:
                     if i.get('size', None) != None:
                         i['size'] = GDriveHelper.convert_size(int(i['size']))
                         san_list.append(i)
+            print(san_list)
             return san_list
         except errors.HttpError as e:
             raise SearchError(
@@ -160,4 +156,18 @@ class GDriveHelper:
 
 if __name__ == "__main__":
     gd = GDriveHelper("token.json", "credentials.json")
-    print(gd.get_file_info('1A5lpP8RT3LIL8OhkD4OMdvanJFk1o19F'))
+    defaulter = {}
+    count = 0
+    with open("file_ids", "r") as f:
+        for file in f.readlines():
+            try:
+                print(f"Checking {file} count: {count}")
+                count+=1
+                parents = gd.get_file_info(file.strip())["parents"]
+                for i in parents:
+                    if i not in defaulter.keys():
+                        defaulter[i] = 0
+                    defaulter[i] += 1
+            except:
+                pass
+    print(defaulter)

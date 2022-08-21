@@ -11,3 +11,5 @@ app/math
 venv/
 file_id.log
 main_log.log
+app/file_ids
+config.ini

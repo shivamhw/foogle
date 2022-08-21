@@ -31,7 +31,7 @@
     <img class="poster_img" name="" width="100px" src="">
   </img>
     <li name=""></li>
-    <div>
+</div>
 </template>
 <div class="auto-box" id="auto_box_id"></div>
 
@@ -57,14 +57,14 @@
 
     // adding item to panel
     for (var i = 0; i < Math.min(5, res["results"].length); i++) {
-      let temp_node = create_auto_suggest_item(res["results"][i], moviedb_img_path);
+      let temp_node = create_auto_suggest_item_series(res["results"][i], moviedb_img_path);
       box.appendChild(temp_node)
     }
 
     //adding event handler
-    document.querySelectorAll(".auto_suggest_item").forEach(li => {
-      li.addEventListener("click", ListItemCopy);
-    });
+    // document.querySelectorAll(".auto_suggest_item").forEach(li => {
+    //   li.addEventListener("click", redirectToLink);
+    // });
     toggleSuggest(1);
   });
 </script>

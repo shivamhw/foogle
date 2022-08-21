@@ -1,6 +1,20 @@
 from urllib.parse import quote
 
 
+
+class RandomMethods:
+
+    @classmethod
+    def uniq_from_list(self, input_list):
+        uniq_list = []
+        temp_id_db = set()
+        for file in input_list:
+                if not file['id'] in temp_id_db:
+                    temp_id_db.add(file['id'])
+                    uniq_list.append(file)
+        return uniq_list
+
+
 class QueryMaker:
 
     file_type = {"video": "mimeType contains 'video/'"}
@@ -27,7 +41,8 @@ class QueryMaker:
                 temp = name
             queries.append(
                 f"name contains '{temp}' and {self.file_type['video']}")
-        queries.append(f"name contains '{'.'.join(name.split())}' and {self.file_type['video']}")
+        queries.append(
+            f"name contains '{'.'.join(name.split())}' and {self.file_type['video']}")
         print(queries)
         return queries
 
