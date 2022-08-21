@@ -92,6 +92,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
 
     @app.route("/process_file/<file_id>")
     def process_f(file_id):
+        parents = None
         try:
             parents = gd.get_parents(file_id)
             dst_file_id = gd.prepare_file(file_id, parents)
