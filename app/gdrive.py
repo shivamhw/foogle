@@ -113,7 +113,7 @@ class GDriveHelper:
             raise FileAccessError(
                 f"Cant get info of {src_file_id}, got {e.error_details[0]['message']}")
 
-    def search(self, search_q, onePageLimit=50, param='id, name, modifiedTime, size, parents'):
+    def search(self, search_q, onePageLimit=200, param='id, name, modifiedTime, size, parents'):
         page_token = None
         try:
             response = self.drive_service.files().list(q=search_q,

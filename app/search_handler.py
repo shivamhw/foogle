@@ -1,5 +1,5 @@
 from .utils import QueryMaker, RandomMethods
-
+import json
 class SearchHandler:
 
     def __init__(self, gd) -> None:
@@ -13,7 +13,7 @@ class SearchHandler:
         return q
 
 
-    def search(self, query: dict, processor):
+    def search(self, query: dict, processor, blocklist):
         # sanitize input
         for key, val in query.items():
             if val != None:
@@ -32,7 +32,22 @@ class SearchHandler:
         uniq_list = RandomMethods.uniq_from_list(output_list)
         print(f"Uniq = {len(output_list)} >> {len(uniq_list)}")
 
-        return uniq_list
+        # removing blocked files
+
+        removed_blocked_list = [] 
+        print(blocklist["folders"])
+        print("0AItocrgdCTcFUk9PVA" in blocklist["folders"])
+        for item in uniq_list:
+            print("Checking for ")
+            print(json.dumps(item))
+            if item["id"] in blocklist["files"] :
+                print("blocked file ID detected ", item)
+            elif any(x in blocklist["folders"] for x in item["parents"]):
+                print(f"Bad parent folder detected for {item} | Parent: {item['parents']}")
+            else:
+                removed_blocked_list.append(item)
+        print(f"after removing blocked items {len(uniq_list)} >> {len(removed_blocked_list)}")
+        return removed_blocked_list
 
 
 
