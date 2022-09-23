@@ -10,7 +10,8 @@ from .db import LinkDB
 import logging
 
 
-bad_file_id_logger = logging.getLogger("bad_file",)
+bad_file_id_logger = logging.getLogger("bad_file")
+blocklist = {}
 
 def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MONGOURI):
     app = Flask(__name__)
@@ -23,6 +24,9 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
     logging.basicConfig(level=logging.WARNING, filemode="w", filename="main_log.log")
     bad_handler = logging.FileHandler("file_id.log")
     bad_file_id_logger.addHandler(bad_handler)
+    blocklist["files"] = db.get_file_blocklist()
+    blocklist["folders"] = db.get_folder_blocklist()
+    # print("Blocklist ", blocklist)
 
     @app.route("/")
     def index():
@@ -99,7 +103,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
             if dst_file_id == None:
                 return "error at getting new file"
         except Exception as e:
-            bad_file_id_logger.error(f"Bad file : {file_id} {str(e)}")
+            bad_file_id_logger.error(f"Bad file : {file_id} | Parent :{parents} | {str(e)}")
             db.add_file_blocklist(file_id)
             if parents is not None:
                 for parent in parents:
@@ -109,13 +113,14 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
 
     @app.route("/search")
     def search_handler():
+        global blocklist
         query = {}
         query["name"] = request.args.get("search_box")
         query["release_year"] = request.args.get("release_year", None)
         list_file = []
         sh = SearchHandler(gd)
         print(query)
-        list_file = sh.search(query, QueryMaker.movie_querymaker)
+        list_file = sh.search(query, QueryMaker.movie_querymaker, blocklist)
         if len(list_file) == 0:
             return render_template("error.html", error=["No results for that one! Might consider checking spelling."])
         for i in list_file:
