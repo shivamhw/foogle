@@ -47,12 +47,14 @@
         temp_node.querySelector(".episode_name").childNodes[0].nodeValue = res[i]["name"];
         temp_node.querySelector(".episode_name").querySelector(".episode_size").innerText = res[i]["size"];
         let media_buttons = temp_node.querySelector(".button_container");
-        media_buttons.children[0].children[0].href = res[i]["process_link"];
-        media_buttons.children[1].children[0].href = "vlc://"+res[i]["stream_link"];  // stream link
-        media_buttons.children[2].addEventListener("click", () => {
-          copyToClip(res[i]["stream_link"]);
-          alert("Streaming Link Copied");
-        });
+        media_buttons.children[0].children[0].href = res[i]["stream_link"];
+        media_buttons.children[1].children[0].href = res[i]["process_link"];  // stream link
+        media_buttons.children[2].children[0].href = "vlc://"+res[i]["stream_link"];
+
+        // media_buttons.children[2].addEventListener("click", () => {
+        //   copyToClip(res[i]["stream_link"]);
+        //   alert("Streaming Link Copied");
+        // });
         link_box.appendChild(temp_node);
       }
       
