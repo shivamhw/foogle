@@ -64,6 +64,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
         search_data = [None] * 3
         search_data[0], search_data[1], search_data[2] = request.args.get("search_box"), request.args.get(
             "sess_nm"), request.args.get("epi_nm")
+        send_msg(f"Series search handler :  {search_data[0]}", bot, group)
         list_file = []
         alternate_q = QueryMaker.make_query(
             QueryMaker.series_querymaker, search_data)
@@ -123,7 +124,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
         global blocklist
         query = {}
         query["name"] = request.args.get("search_box")
-        send_msg(query["name"], bot, group)
+        send_msg(f"Movie search handler :  {query['name']}", bot, group)
         query["release_year"] = request.args.get("release_year", None)
         list_file = []
         sh = SearchHandler(gd)
@@ -139,6 +140,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
     def file_search_handler():
         query = [None] *2
         query[0], query[1] = request.args.get("search_box"), request.args.get("type", None)
+        send_msg(f"Custom search handler :  {query[0]}", bot, group)
         queries = QueryMaker.make_query(QueryMaker.files_querymaker, query)
         print(queries)
         for q in queries["q"]:
