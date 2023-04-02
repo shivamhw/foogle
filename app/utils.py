@@ -1,6 +1,26 @@
 from urllib.parse import quote
+import requests
+import logging
 
 
+def send_msg(msg, BOT_TOKEN, GROUP_CHAT_ID):
+    # The message you want to send to the group
+    MESSAGE = msg
+
+    # URL for the Telegram Bot API's sendMessage method
+    URL = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+
+    # Parameters for the sendMessage method
+    params = {"chat_id": GROUP_CHAT_ID, "text": MESSAGE}
+
+    # Send the message to the group chat using the requests library
+    response = requests.post(URL, data=params)
+
+    # Check if the request was successful (HTTP status code 200)
+    if response.status_code == 200:
+        logging.info("Message sent successfully!")
+    else:
+        logging.info(f"Error sending message: {response.text}")
 
 class RandomMethods:
 

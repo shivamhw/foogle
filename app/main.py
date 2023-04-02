@@ -2,7 +2,7 @@ from flask import Flask, request, redirect, send_file
 from flask.helpers import url_for
 from flask.templating import render_template
 import requests
-from .utils import QueryMaker, LinkMaker
+from .utils import QueryMaker, LinkMaker, send_msg
 from .search_handler import SearchHandler
 from .gdrive import  GDriveHelper, FileAccessError
 from .api.api_app import create_blueprint
@@ -12,8 +12,15 @@ import logging
 
 bad_file_id_logger = logging.getLogger("bad_file")
 blocklist = {}
+bot = None
+group = None
 
-def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MONGOURI):
+
+def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MONGOURI, TELE_BOT, GROUP):
+    global bot
+    global group
+    group = GROUP
+    bot = TELE_BOT
     app = Flask(__name__)
     db = LinkDB(MONGOURI)
     app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -116,6 +123,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
         global blocklist
         query = {}
         query["name"] = request.args.get("search_box")
+        send_msg(query["name"], bot, group)
         query["release_year"] = request.args.get("release_year", None)
         list_file = []
         sh = SearchHandler(gd)
