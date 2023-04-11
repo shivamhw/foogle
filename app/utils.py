@@ -101,6 +101,8 @@ class LinkMaker:
             options = kwargs
         else:
             options = self.options
+        if options.get("td_override", False):
+            file["td_override"] = f"https://hw77.gokuhw77.workers.dev/{file['td_override']}:/Foogle/{ quote(file['name']) }"
         if options.get("stream_link", False):
             file["stream_link"] = f"{ self.cf_worker }/stream_file/{ file['id'] }/{ quote(file['name'].replace(' ', '_')) }"
         if options.get("process_link", False):

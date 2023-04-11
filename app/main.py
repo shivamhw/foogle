@@ -8,13 +8,25 @@ from .gdrive import  GDriveHelper, FileAccessError
 from .api.api_app import create_blueprint
 from .db import LinkDB
 import logging
-
+import json
+import random
 
 bad_file_id_logger = logging.getLogger("bad_file")
 blocklist = {}
 bot = None
 group = None
+td_dir = None
 
+def load_td(path):
+    global td_dir
+    with open(path, 'r') as f:
+        td_dir = json.load(f)
+    print(td_dir)
+
+def get_temp(all=False):
+    if all:
+        return td_dir
+    return random.choice(td_dir)
 
 def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MONGOURI, TELE_BOT, GROUP):
     global bot
@@ -23,11 +35,12 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
     bot = TELE_BOT
     app = Flask(__name__)
     db = LinkDB(MONGOURI)
+    load_td(TEMP_FOLDER)
     app.config['TEMPLATES_AUTO_RELOAD'] = True
-    gd = GDriveHelper(TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER)
+    gd = GDriveHelper(TOKEN_JSON_PATH, CRED_JSON_PATH, get_temp)
     app.register_blueprint(create_blueprint(gd, CF_WORKER_SITE), url_prefix="/api")
     links_result = LinkMaker(CF_WORKER_SITE, stream_link=True, process_link=True, cf_download_link=True)
-    link_final_page = LinkMaker(CF_WORKER_SITE, stream_link=True, gdrive_link=True, cf_download_link=True)
+    link_final_page = LinkMaker(CF_WORKER_SITE, stream_link=True, gdrive_link=True, cf_download_link=True, td_override=True)
     logging.basicConfig(level=logging.WARNING, filemode="w", filename="main_log.log")
     bad_handler = logging.FileHandler("file_id.log")
     bad_file_id_logger.addHandler(bad_handler)
@@ -86,6 +99,9 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
     @app.route("/links")
     def links():
         file_id = request.args.get("file_id")
+        td = request.args.get("td")
+        td = td.replace("'", "\"")
+        td = json.loads(td)
         try:
             file_info = gd.get_file_info(file_id)
             check_code = requests.head(file_info["webContentLink"]).status_code
@@ -99,6 +115,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
             bad_file_id_logger.error(f"Bad file : {file_id} {str(e)}")
             logging.exception("HttpError in /links")
             return render_template('error.html', error=[f"broken link!! Try other links. RT{str(e)}"])
+        file_info['td_override'] = td['name']
         file_info = link_final_page.make_links(file_info)
         return render_template("links.html", link_dict=file_info)
 
@@ -107,7 +124,8 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
         parents = None
         try:
             parents = gd.get_parents(file_id)
-            dst_file_id = gd.prepare_file(file_id, parents)
+            print("got parent", parents)
+            dst_file_id, td = gd.prepare_file(file_id, parents)
             if dst_file_id == None:
                 return "error at getting new file"
         except Exception as e:
@@ -117,7 +135,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
                 for parent in parents:
                     db.add_folder_blocklist(parent, file_id)
             return render_template("error.html", error = ["this one is on me :)" ,str(e)])
-        return redirect(url_for('links', file_id=dst_file_id))
+        return redirect(url_for('links', file_id=dst_file_id, td=td))
 
     @app.route("/search")
     def search_handler():
@@ -128,7 +146,6 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
         query["release_year"] = request.args.get("release_year", None)
         list_file = []
         sh = SearchHandler(gd)
-        print(query)
         list_file = sh.search(query, QueryMaker.movie_querymaker, blocklist)
         if len(list_file) == 0:
             return render_template("error.html", error=["No results for that one! Might consider checking spelling."])

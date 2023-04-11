@@ -56,7 +56,8 @@ class GDriveHelper:
 
     def copy_file(self, source, destination=None):
         if destination == None:
-            destination = self.TEMP_DIR
+            destination = self.TEMP_DIR()
+            print("got desti ", destination)
         origin_file_id = source
         folder_id = destination
         copied_file = {'title': 'copy_title.mkv', 'parents': [folder_id]}
@@ -78,17 +79,29 @@ class GDriveHelper:
                 f"Can't access file {file_id}, got {e.error_details}")
 
     def prepare_file(self, src_file_id, parents = None):
-        if parents is not None and self.TEMP_DIR in parents :
-            print("not copying")
-            return src_file_id
-        else:
-            print("Copying file")
-            r = self.copy_file(src_file_id)
-            print("copy complete")
-            dst_file_id = r.get("id", None)
-            print(dst_file_id)
-        print("return id")
-        return dst_file_id
+        if parents is not None:
+            for parent in parents:
+              for drive in self.TEMP_DIR(all=True):
+                  if drive['id'] == parent:
+                    print("not copying", drive)
+                    return src_file_id, drive
+        retry = 3
+        td = self.TEMP_DIR()
+        while retry > 0:
+            try:
+                inf = self.get_file_info(td['id'], param='id, name')
+                break
+            except Exception as e:
+                print("issue getting td , try next ",td, retry, e)
+                retry -= 1
+                td = self.TEMP_DIR()
+        print("Copying file", td)
+        r = self.copy_file(src_file_id, td['id'])
+        print("copy complete")
+        dst_file_id = r.get("id", None)
+        print(dst_file_id)
+        print("return id", dst_file_id, td)
+        return dst_file_id, td
 
     def change_permission(self, file_id, user_permission=None):
         if user_permission == None:
@@ -107,7 +120,8 @@ class GDriveHelper:
         try:
             res = self.drive_service.files().get(fileId=src_file_id, fields=param,
                                                  supportsAllDrives='true').execute()
-            res['size'] = GDriveHelper.convert_size(int(res['size']))
+            if 'size' in param:
+                res['size'] = GDriveHelper.convert_size(int(res['size']))
             return res
         except errors.HttpError as e:
             raise FileAccessError(
