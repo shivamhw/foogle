@@ -44,8 +44,10 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
     logging.basicConfig(level=logging.WARNING, filemode="w", filename="main_log.log")
     bad_handler = logging.FileHandler("file_id.log")
     bad_file_id_logger.addHandler(bad_handler)
-    blocklist["files"] = db.get_file_blocklist()
-    blocklist["folders"] = db.get_folder_blocklist()
+    blocklist["files"] = []
+    blocklist["folders"] = []
+    # blocklist["files"] = db.get_file_blocklist()
+    # blocklist["folders"] = db.get_folder_blocklist()
     # print("Blocklist ", blocklist)
 
     @app.route("/")
