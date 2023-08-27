@@ -1,4 +1,4 @@
-from .utils import QueryMaker, RandomMethods
+from .utils import QueryMaker, Utils
 import json
 class SearchHandler:
 
@@ -29,14 +29,13 @@ class SearchHandler:
             print("Found resutls : ", len(result))
             output_list += result
         # sorting uniq items 
-        uniq_list = RandomMethods.uniq_from_list(output_list)
+        uniq_list = Utils.uniq_from_list(output_list)
         print(f"Uniq = {len(output_list)} >> {len(uniq_list)}")
 
         # removing blocked files
 
         removed_blocked_list = [] 
         print(blocklist["folders"])
-        print("0AItocrgdCTcFUk9PVA" in blocklist["folders"])
         for item in uniq_list:
             print("Checking for ")
             print(json.dumps(item))

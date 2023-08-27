@@ -11,22 +11,6 @@ import logging
 import json
 import random
 
-bad_file_id_logger = logging.getLogger("bad_file")
-blocklist = {}
-bot = None
-group = None
-td_dir = None
-
-def load_td(path):
-    global td_dir
-    with open(path, 'r') as f:
-        td_dir = json.load(f)
-    print(td_dir)
-
-def get_temp(all=False):
-    if all:
-        return td_dir
-    return random.choice(td_dir)
 
 def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MONGOURI, TELE_BOT, GROUP):
     global bot
@@ -42,37 +26,7 @@ def create_app(CF_WORKER_SITE, TOKEN_JSON_PATH, CRED_JSON_PATH, TEMP_FOLDER, MON
     links_result = LinkMaker(CF_WORKER_SITE, stream_link=True, process_link=True, cf_download_link=True)
     link_final_page = LinkMaker(CF_WORKER_SITE, stream_link=True, gdrive_link=True, cf_download_link=True, td_override=True)
     logging.basicConfig(level=logging.WARNING, filemode="w", filename="main_log.log")
-    bad_handler = logging.FileHandler("file_id.log")
-    bad_file_id_logger.addHandler(bad_handler)
-    blocklist["files"] = []
-    blocklist["folders"] = []
-    # blocklist["files"] = db.get_file_blocklist()
-    # blocklist["folders"] = db.get_folder_blocklist()
-    # print("Blocklist ", blocklist)
-
-    @app.route("/")
-    def index():
-        return render_template('index.html')
-
-    @app.route("/files.html")
-    def files_page():
-        return render_template("files.html")
-
-    @app.route("/robots.txt")
-    def robot():
-        return send_file("robots.txt")
-
-    @app.route("/season_details/<series_id>/<season_id>")
-    def season_details(series_id, season_id):
-        return render_template("season_details.html", series_id=series_id, season_id=season_id)
-
-    @app.route("/series_details/<series_id>")
-    def series_details(series_id):
-        return render_template("series_details.html", series_id=series_id)
-
-    @app.route("/series.html")
-    def se_se():
-        return render_template("series.html")
+ 
 
     @app.route("/series_search")
     def s_search():

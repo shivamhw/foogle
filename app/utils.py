@@ -22,7 +22,7 @@ def send_msg(msg, BOT_TOKEN, GROUP_CHAT_ID):
     else:
         logging.info(f"Error sending message: {response.text}")
 
-class RandomMethods:
+class Utils:
 
     @classmethod
     def uniq_from_list(self, input_list):
