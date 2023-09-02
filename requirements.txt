@@ -29,3 +29,4 @@ urllib3==1.26.8
 Werkzeug==2.0.2
 pymongo
 dnspython
+pydantic==1.10.9
