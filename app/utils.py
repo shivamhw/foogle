@@ -1,6 +1,8 @@
+from typing import List
 from urllib.parse import quote
 import requests
 import logging
+from .data import GdSearchResponse, SeriesSearchRequest
 
 
 def send_msg(msg, BOT_TOKEN, GROUP_CHAT_ID):
@@ -22,7 +24,19 @@ def send_msg(msg, BOT_TOKEN, GROUP_CHAT_ID):
     else:
         logging.info(f"Error sending message: {response.text}")
 
-class RandomMethods:
+class Utils:
+
+    @classmethod
+    def sanitize(self, q: str):
+        if q is None:
+            return q
+        q = q.replace("'", "\\'")
+        return q
+    
+    @classmethod
+    def make_inline_links(self, responses: List[GdSearchResponse], context):
+        for item in responses:
+            item.cf_download_link = f"{context.config.cf_worker_site}/getfile/{item.id}"
 
     @classmethod
     def uniq_from_list(self, input_list):
@@ -40,54 +54,42 @@ class QueryMaker:
     file_type = {"video": "mimeType contains 'video/'"}
 
     @classmethod
-    def make_query(self, processor, args: dict):
-        queries = {"q": []}
-        for temp in processor(args):
-            queries["q"].append(temp)
-        return queries
-
-    @classmethod
-    def movie_querymaker(self, query: dict, sep=[" ", ".", ""]):
+    def movie_querymaker(self, movie_name, movie_release_year, sep=[" ", ".", ""]) -> List[str]:
         queries = []
-        release_year = query['release_year']
-        name = query['name']
-        if release_year == None:
-            release_year = ""
         for s in sep:
-            temp = f"{name}{s}{release_year}"
-            if s == " " and len(release_year) == 0:
+            temp = f"{movie_name}{s}{movie_release_year}"
+            if s == " " and movie_release_year:
                 continue
             if s == "":
-                temp = name
+                temp = movie_name
             queries.append(
                 f"name contains '{temp}' and {self.file_type['video']}")
         queries.append(
-            f"name contains '{'.'.join(name.split())}' and {self.file_type['video']}")
+            f"name contains '{'.'.join(movie_name.split())}' and {self.file_type['video']}")
         print(queries)
         return queries
 
     @classmethod
-    def series_querymaker(self, query: dict, sep="."):
-        name, season, epi = query
-        alternate_q = [f"name contains '{ sep.join(name.split()) }{sep}s{season}e{epi}'",
-                       f"name contains '{ sep.join(name.split()) }{sep}s{season}ep{epi}'",
-                       f"name contains '{ sep.join(name.split()) }{sep}s{season}{sep}e{epi}'",
-                       f"name contains '{ sep.join(name.split()) }{sep}s{season}{sep}ep{epi}'",
-                       f"name contains '{name} s{season}e{epi}'",
-                       f"name contains '{name} s{season} e{epi}'",
-                       f"name contains '{name} s{season} ep{epi}'",
-                       f"name contains '{name} s{season}ep{epi}'",
-                       f"name contains '{name} s{season}'",
-                       f"name contains '{name} season {season}'",
-                       f"name contains '{name}'"]
+    def series_querymaker(cls, series: SeriesSearchRequest, sep=".") -> List[str]:
+        series.series_name = Utils.sanitize(series.series_name)
+        alternate_q = [f"name contains '{ sep.join(series.series_name.split()) }{sep}s{series.season_nm}e{series.episode_nm}'",
+                       f"name contains '{ sep.join(series.series_name.split()) }{sep}s{series.season_nm}ep{series.episode_nm}'",
+                       f"name contains '{ sep.join(series.series_name.split()) }{sep}s{series.season_nm}{sep}e{series.episode_nm}'",
+                       f"name contains '{ sep.join(series.series_name.split()) }{sep}s{series.season_nm}{sep}ep{series.episode_nm}'",
+                       f"name contains '{series.series_name} s{series.season_nm}e{series.episode_nm}'",
+                       f"name contains '{series.series_name} s{series.season_nm} e{series.episode_nm}'",
+                       f"name contains '{series.series_name} s{series.season_nm} ep{series.episode_nm}'",
+                       f"name contains '{series.series_name} s{series.season_nm}ep{series.episode_nm}'",
+                       f"name contains '{series.series_name} s{series.season_nm}'",
+                       f"name contains '{series.series_name} season {series.season_nm}'",
+                       f"name contains '{series.series_name}'"]
         for ind, val in enumerate(alternate_q):
-            alternate_q[ind] = val + " and "+self.file_type["video"]
+            alternate_q[ind] = val + " and " + cls.file_type["video"]
         return alternate_q
 
     @classmethod
     def files_querymaker(self, query):
-        name, type = query
-        return [f"name contains '{name}'"]
+        return [f"name contains '{query}'"]
 
 
 class LinkMaker:
@@ -112,6 +114,7 @@ class LinkMaker:
         if options.get("gdrive_link", False):
             file["gdrive_link"] = file["webContentLink"]
         return file
+
 
 
 if __name__ == "__main__":

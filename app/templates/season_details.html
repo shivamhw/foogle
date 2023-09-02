@@ -43,18 +43,14 @@
       link_box.innerHTML = "";
       
       for(let i=0; i<res.length;i++){
+        let curr_item = JSON.parse(res[i])
         let temp_node = document.querySelector("#epi_table_entry").content.cloneNode(true);
-        temp_node.querySelector(".episode_name").childNodes[0].nodeValue = res[i]["name"];
-        temp_node.querySelector(".episode_name").querySelector(".episode_size").innerText = res[i]["size"];
+        temp_node.querySelector(".episode_name").childNodes[0].nodeValue = curr_item["name"];
+        temp_node.querySelector(".episode_name").querySelector(".episode_size").innerText = curr_item["size"];
         let media_buttons = temp_node.querySelector(".button_container");
-        media_buttons.children[0].children[0].href = res[i]["stream_link"];
-        media_buttons.children[1].children[0].href = res[i]["process_link"];  // stream link
-        media_buttons.children[2].children[0].href = "vlc://"+res[i]["stream_link"];
-
-        // media_buttons.children[2].addEventListener("click", () => {
-        //   copyToClip(res[i]["stream_link"]);
-        //   alert("Streaming Link Copied");
-        // });
+        media_buttons.children[0].children[0].href = curr_item["cf_download_link"];
+        media_buttons.children[1].children[0].href = curr_item["cf_download_link"];  // stream link
+        media_buttons.children[2].children[0].href = "vlc://"+curr_item["cf_download_link"];
         link_box.appendChild(temp_node);
       }
       

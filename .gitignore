@@ -14,3 +14,12 @@ main_log.log
 app/file_ids
 config.ini
 app/gdrive_cron.py
+temp
+.idea/misc.xml
+.gitignore
+.idea/foogle.iml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/workspace.xml
+.idea/inspectionProfiles/Project_Default.xml
+.vscode/launch.json

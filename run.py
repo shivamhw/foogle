@@ -1,19 +1,11 @@
 from app.main import create_app
 import configparser
-
+from app.data import Config
 config = configparser.ConfigParser()
 config.read('config.ini')
-cfg = {}
-cfg["CF_WORKER_SITE"] = config["foogle"]["CF_WORKER_SITE"]
-cfg["CRED_JSON_PATH"] = config["foogle"]["CRED_JSON_PATH"]
-cfg["TOKEN_JSON_PATH"] = config["foogle"]["TOKEN_JSON_PATH"]
-cfg["TEMP_FOLDER"] = config["foogle"]["TEMP_FOLDER"]
-cfg["MONGOURI"] = config["foogle"]["MONGOURI"]
-cfg["TELE_BOT"] = config["foogle"]["TELE"]
-cfg["GROUP"] = config["foogle"]["GROUP"]
-
+cfg = Config(**config['foogle'])
 
 if __name__ == "__main__":
-    create_app(**cfg).run(host="0.0.0.0", port="5500",debug=True)
+    create_app(cfg).run(host="127.0.0.1", port="5500", debug=True)
 else:
-    gunicorn = create_app(**cfg)
+    gunicorn = create_app(cfg)
