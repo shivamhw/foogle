@@ -37,7 +37,8 @@ class Utils:
     def make_inline_links(self, responses: List[GdSearchResponse], context):
         for item in responses:
             item.cf_download_link = f"{context.config.cf_worker_site}/getfile/{item.id}"
-
+            item.stream_link = f"{context.config.cf_worker_site}/stream_file/{item.id}/{quote(item.name)}"
+            
     @classmethod
     def uniq_from_list(self, input_list):
         uniq_list = []

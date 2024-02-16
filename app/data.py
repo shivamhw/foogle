@@ -24,6 +24,7 @@ class GdSearchResponse(BaseModel):
     name: str
     modifiedTime: str
     cf_download_link: Optional[str]
+    stream_link: Optional[str]
     gdrive_link: Optional[str]
 
 class SeriesSearchRequest(BaseModel):

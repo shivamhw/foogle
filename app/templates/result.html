@@ -32,8 +32,11 @@
           <div class="download_button pls_wait">
               <a href="{{ n['cf_download_link'] }}"><i class="fa fa-bolt" style="color: aqua;" ></i></a>
           </div>
+          <div class="download_button">
+            <a href="{{ n['stream_link'] }}"><i class="fa fa-bolt" style="color: rgb(10, 226, 75);" ></i></a>
+        </div>
           <div class="play_with_vlc_button">
-            <a href="vlc://{{ n['cf_download_link'] }}"><i class="fa fa-play-circle" style="color: orange;"></i></a>
+            <a href="vlc://{{ n['stream_link'] }}"><i class="fa fa-play-circle" style="color: orange;"></i></a>
         </div>
             </div>
       </td>
